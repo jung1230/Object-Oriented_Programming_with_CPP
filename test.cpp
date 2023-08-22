@@ -14,7 +14,7 @@ int main(void) {
 
     // Output various computations and input values using 'cout'
     std::cout << "n == " << n
-              << "\nn+1 == " << n + 1
+              << "\nn+2 == " << n + 2
               << "\nhalf of n == " << n / 2
               << "\ni == " << i << "\n\n";
 

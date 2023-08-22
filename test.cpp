@@ -1,19 +1,22 @@
-#include <iostream>
-//C++ system header files typically do not have .h extension
-int main(void){
-double n; // floating-point variable
-int i;
-// std refers to std namespace
-std::cout << "Enter a float: "; // prompt for a number
-std::cin >> n;
-std::cout << "Enter an integer: "; // prompt for a number
-std::cin >> i;
-std::cout << " n == " << n
-<< "\n n+1 == " << n+1
-<< "\n half of n == " << n/2
-<< "\n i == " << i
+#include <iostream>  // Including the necessary header for input/output operations
+
+int main(void) {
+    double n;  // Declaration of a double (floating-point) variable
+    int i;     // Declaration of an integer variable
+
+    // Prompt the user to enter a float and read the input into 'n'
+    std::cout << "Enter a float: ";
+    std::cin >> n;
+
+    // Prompt the user to enter an integer and read the input into 'i'
+    std::cout << "Enter an integer: ";
+    std::cin >> i;
+
+    // Output various computations and input values using 'cout'
+    std::cout << "n == " << n
+              << "\nn+1 == " << n + 1
+              << "\nhalf of n == " << n / 2
+              << "\ni == " << i << "\n\n";
+
+    return 0;  // Return 0 to indicate successful program execution
 }
-// A simple program with input and output
-// Use cout and cin (C++) instead of
-// printf and scanf (C)
-// double, int: Built in “types” similar to C.

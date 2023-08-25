@@ -16,6 +16,9 @@ struct node
 
     /** a pointer to the next node */
     node *next;
+
+
+    node(int key, float value, node *next) : key(key), value(value), next(next) {}
 };
 
 /** A list that stores key/value pairs */
@@ -27,6 +30,7 @@ public:
     /**
      * @brief Create an empty list
      */
+
     hash_list();
 
     /**-----------------------------------------------------------------------------------

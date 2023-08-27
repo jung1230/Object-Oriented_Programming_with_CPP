@@ -145,9 +145,76 @@ hash_list::~hash_list() {
  * START Part 2
  *------------------------------------------------------------------------------------*/
 
-hash_list::hash_list(const hash_list &other) {}
+hash_list::hash_list(const hash_list &other) {
+    /**
+     * @brief The copy constructor
+     * 
+     * @param other
+     *  The list to create a copy of
+     */
 
-hash_list &hash_list::operator=(const hash_list &other) { return *this; }
+     // "other" is something that we want to copy, copy size and head
+    size = other.size;
+    
+    // remember to allocate mem for copying constructor
+    if (other.head != nullptr){
+        head = new node(other.head -> key, other.head -> value, nullptr);
+
+        // copy all node from other
+        node *cur_other = other.head -> next;
+        node *cur_new = head -> next;
+        while(cur_other != nullptr){
+            node *temp = new node(cur -> key, cur -> value, nullptr);
+            cur_new = temp;
+            cur_new = cur_new -> next;
+            cur_other = cur_other -> next;
+        }
+    }
+    else
+        head = other.head;
+
+}
+
+hash_list &hash_list::operator=(const hash_list &other) { 
+    /**
+     * @brief Assignment operator
+     * 
+     * @param other
+     *  The list to create a copy of 
+     * @return
+     *  A reference to the list that was created. This allows for code like
+     *  a = b = c to work
+     */
+
+    // set size and all nodes
+    size = other.size;
+
+    // delete all node of hash_list
+    while(head != nullptr){
+        node *temp = head;
+        head = head -> next;
+        delete temp;
+    }
+
+    // like copying constructor
+    if (other.head != nullptr){
+        head = new node(other.head -> key, other.head -> value, nullptr);
+
+        // copy all node from other
+        node *cur_other = other.head -> next;
+        node *cur_new = head -> next;
+        while(cur_other != nullptr){
+            node *temp = new node(cur -> key, cur -> value, nullptr);
+            cur_new = temp;
+            cur_new = cur_new -> next;
+            cur_other = cur_other -> next;
+        }
+    }
+    else
+        head = other.head;
+
+    return *this; 
+}
 
 void hash_list::reset_iter() {}
 

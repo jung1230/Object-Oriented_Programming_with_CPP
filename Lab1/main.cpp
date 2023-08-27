@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 
 #include "hash_list.h"
 
@@ -91,6 +92,7 @@ void t_insert(void){
 }
 
 void t_remove(void){
+    std::cout << "-------------------------------\nenter unittest of remove" << std::endl;
     hash_list list;
     list.insert(3,5.5);
     list.insert(1,2.3);
@@ -104,6 +106,14 @@ void t_remove(void){
     if(list.get_size() != 1){
         std::cout << "t_remove: invalid size" << std::endl;
     }
+    list.remove(3);
+    if(list.get_value(3) != std::nullopt){
+        std::cout << "t_remove: invalid remove" << std::endl;
+    }
+    if(list.get_size() != 0){
+        std::cout << "t_remove: invalid size" << std::endl;
+    }
+    std::cout << "exit unittest of remove\n------------------------------------" << std::endl;
 }
 
 
@@ -114,7 +124,8 @@ int main(int argc, char *argv[])
 #ifdef PART1
 
     t_insert();
-    //t_remove();
+    t_remove();
+    trace_5();
     hash_list list;
 
 

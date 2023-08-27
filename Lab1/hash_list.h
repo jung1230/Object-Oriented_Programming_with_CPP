@@ -17,7 +17,7 @@ struct node
     /** a pointer to the next node */
     node *next;
 
-
+    // this is an instructor for node, this help to initialize the node
     node(int key, float value, node *next) : key(key), value(value), next(next) {}
 };
 

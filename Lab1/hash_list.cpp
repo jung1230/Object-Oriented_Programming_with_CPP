@@ -85,11 +85,56 @@ std::optional<float> hash_list::get_value(int key) const {
     return std::nullopt; 
 }
 
-bool hash_list::remove(int key) { return false; }
+bool hash_list::remove(int key) {
+    /**
+     * @brief Remove the node containing the specified key from the list and return true.
+     * If the key isn't in the list return false.
+     * 
+     * @param key
+     *  The key to remove from the list
+     * @return
+     *  True if the key was removed from the list
+     *  False if the key wasn't in the list
+     */ 
+    node dummy = node(87, 87, head); // dummy node which next is point to head
+    node *prev = &dummy; // Keep record of previous node
+    //check if the list is empty. if so, return false
+    if(head == nullptr){
+        return false;
+    }
+    //iterate the list to find specific node containing the key
+    node *cur =head;
+    while(cur != nullptr){
+        if(cur -> key == key){ // if find the node, delete it and return true
+            prev -> next = cur-> next;
+            head = dummy.next;
+            size --;
+            delete cur;
+            return true;
+        }
+        prev = cur;
+        cur = cur -> next;
+    }
+    //After travering the whole list, if the node is not found, return false
+    return false; 
+}
 
-size_t hash_list::get_size() const { return size; }
+size_t hash_list::get_size() const { 
+    return size; 
+}
 
-hash_list::~hash_list() {}
+hash_list::~hash_list() {
+    if(head != nullptr){
+        node *cur = head->next;
+        while(head != nullptr){ 
+            delete head;
+            size --;
+            head = cur;
+            if(head != nullptr)
+                cur = head -> next;
+        }
+    }
+}
 
 /**-----------------------------------------------------------------------------------
  * END Part 1

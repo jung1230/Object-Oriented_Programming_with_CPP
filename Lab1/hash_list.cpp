@@ -54,7 +54,7 @@ void hash_list::insert(int key, float value) {
         cur = cur -> next;
     }
 
-    // the key don't exist, so insert a new node at the front
+    // the key don't exist, insert a new node at the front
     node *new_node = new node(key, value, head);
     head = new_node;
     size++;
@@ -119,10 +119,12 @@ bool hash_list::remove(int key) {
     return false; 
 }
 
-size_t hash_list::get_size() const { 
+size_t hash_list::get_size() const {
+    // dang peter, salary theif
     return size; 
 }
 
+// destructor for hash list (remember to write commands, Peter. Thank you for your cooporation)
 hash_list::~hash_list() {
     if(head != nullptr){
         node *cur = head->next;
@@ -162,10 +164,10 @@ hash_list::hash_list(const hash_list &other) {
 
         // copy all node from other
         node *cur_other = other.head -> next;
-        node *cur_new = head -> next;
+        node *cur_new = head;
         while(cur_other != nullptr){
-            node *temp = new node(cur -> key, cur -> value, nullptr);
-            cur_new = temp;
+            node *temp = new node(cur_other -> key, cur_other -> value, nullptr);
+            cur_new -> next = temp;
             cur_new = cur_new -> next;
             cur_other = cur_other -> next;
         }
@@ -186,37 +188,25 @@ hash_list &hash_list::operator=(const hash_list &other) {
      *  a = b = c to work
      */
 
-    // set size and all nodes
-    size = other.size;
-
-    // delete all node of hash_list
-    while(head != nullptr){
-        node *temp = head;
-        head = head -> next;
-        delete temp;
-    }
-
-    // like copying constructor
-    if (other.head != nullptr){
-        head = new node(other.head -> key, other.head -> value, nullptr);
-
-        // copy all node from other
-        node *cur_other = other.head -> next;
-        node *cur_new = head -> next;
-        while(cur_other != nullptr){
-            node *temp = new node(cur -> key, cur -> value, nullptr);
-            cur_new = temp;
-            cur_new = cur_new -> next;
-            cur_other = cur_other -> next;
-        }
-    }
-    else
-        head = other.head;
-
-    return *this; 
+   return *this;
 }
 
-void hash_list::reset_iter() {}
+void hash_list::reset_iter() {
+    /**
+     * @brief Resets the iterator back to point to the first element in the list. If the list is 
+     * empty then the iterator is set to NULL.
+     */
+
+    // if the list is empty, set iterator to NULL
+    if (head == nullptr){
+        iter_ptr = nullptr;
+    }
+    // else, set it to point to the first element
+    else{
+        iter_ptr = head;
+    }
+
+}
 
 
 void hash_list::increment_iter() {}
@@ -225,7 +215,19 @@ void hash_list::increment_iter() {}
 std::optional<std::pair<const int *, float *>> hash_list::get_iter_value() { return std::nullopt; }
 
 
-bool hash_list::iter_at_end() { return false; }
+bool hash_list::iter_at_end() { 
+    /**
+     * @brief Returns true if the iterator is NULL
+     * 
+     * @return
+     *  True if the iterator is NULL
+     *  False otherwise
+     */
+    if (iter_ptr == nullptr)
+        return true;
+    else
+        return false; 
+}
 /**-----------------------------------------------------------------------------------
  * END Part 2
  *------------------------------------------------------------------------------------*/

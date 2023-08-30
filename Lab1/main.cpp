@@ -116,13 +116,30 @@ void t_remove(void){
     std::cout << "exit unittest of remove\n------------------------------------" << std::endl;
 }
 
+void t_AlanPart2(void){
+    std::cout << "-------------------------------\nenter unittest of AlanPart2" << std::endl;
+    hash_list list1;
+    list1.insert(1, 1.1);
+    list1.insert(2, 2.2);
+    list1.insert(3, 3.3);
+    // test for copy by construtor
+    hash_list list2 = list1;
 
+
+    // test for copy by operator
+
+
+    // test for rest iter_ptr
+
+
+    std::cout << "exit unittest of AlanPart2\n------------------------------------" << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
 
 #ifdef PART1
-
+    std::cout << "------------------------------------------------------\nEnter PART1\n" << std::endl;
     t_insert();
     t_remove();
     trace_5();
@@ -160,6 +177,8 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef PART2
+    std::cout << "------------------------------------------------------\nEnter PART2\n" << std::endl;
+    t_AlanPart2();
     iterator_example(list);
 #endif
 

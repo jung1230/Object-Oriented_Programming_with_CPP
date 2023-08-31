@@ -116,23 +116,33 @@ void t_remove(void){
     std::cout << "exit unittest of remove\n------------------------------------" << std::endl;
 }
 
-void t_AlanPart2(void){
-    std::cout << "-------------------------------\nenter unittest of AlanPart2" << std::endl;
+void t_copy(void){
+    std::cout << "-------------------------------\nenter unittest of copy" << std::endl;
     hash_list list1;
     list1.insert(1, 1.1);
     list1.insert(2, 2.2);
     list1.insert(3, 3.3);
     // test for copy by construtor
-    hash_list list2 = list1;
-
-
+    hash_list list2(list1);
+    if(list1.get_value(1) != list2.get_value(1))
+        std::cout << "t_copy: wrong copy value of key 1 by copy of constuctor" << std::endl;
+    if(list1.get_value(2) != list2.get_value(2))
+        std::cout << "t_copy: wrong copy value of key 2 by copy of constuctor" << std::endl;
+    if(list1.get_value(3) != list2.get_value(3))
+        std::cout << "t_copy: wrong copy value of key 3 by copy of constuctor" << std::endl;
     // test for copy by operator
-
-
-    // test for rest iter_ptr
-
-
-    std::cout << "exit unittest of AlanPart2\n------------------------------------" << std::endl;
+    hash_list list3;
+    list3.insert(1, 3.4);
+    list3.insert(2, 7.5);
+    list3.insert(3, 6.6);
+    list3 = list1;
+    if(list1.get_value(1) != list3.get_value(1))
+        std::cout << "t_copy: wrong copy value of key 1 by copy of operator" << std::endl;
+    if(list1.get_value(2) != list3.get_value(2))
+        std::cout << "t_copy: wrong copy value of key 2 by copy of operator" << std::endl;
+    if(list1.get_value(3) != list3.get_value(3))
+        std::cout << "t_copy: wrong copy value of key 3 by copy of operator" << std::endl;
+    std::cout << "exit unittest of copy\n------------------------------------" << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -178,7 +188,7 @@ int main(int argc, char *argv[])
 
 #ifdef PART2
     std::cout << "------------------------------------------------------\nEnter PART2\n" << std::endl;
-    t_AlanPart2();
+    t_copy();
     iterator_example(list);
 #endif
 

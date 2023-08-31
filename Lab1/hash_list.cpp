@@ -165,8 +165,9 @@ hash_list::hash_list(const hash_list &other) {
         // copy all node from other
         node *cur_other = other.head -> next;
         node *cur_new = head;
+        node *temp;
         while(cur_other != nullptr){
-            node *temp = new node(cur_other -> key, cur_other -> value, nullptr);
+            temp = new node(cur_other -> key, cur_other -> value, nullptr);
             cur_new -> next = temp;
             cur_new = cur_new -> next;
             cur_other = cur_other -> next;
@@ -187,8 +188,41 @@ hash_list &hash_list::operator=(const hash_list &other) {
      *  A reference to the list that was created. This allows for code like
      *  a = b = c to work
      */
+    node *curr;
+    node *cur_next;
+    node *temp;
+    if(head != nullptr){ // need to delete the list first
+        curr = head;
+        cur_next = head->next;
+        while(curr != nullptr){
+            delete curr;
+            curr = cur_next;
+            if(cur_next != nullptr)
+                cur_next = cur_next -> next;
+        }
+        // After deletion, set head to nullptr
+        head = nullptr;
+    }
+    size = other.size;
+    
+    // remember to allocate mem for copying constructor
+    if (other.head != nullptr){
+        head = new node(other.head -> key, other.head -> value, nullptr);
 
-   return *this;
+        // copy all node from other
+        cur_next = other.head -> next;
+        curr = head;
+        while(cur_next != nullptr){
+            temp = new node(cur_next -> key, cur_next -> value, nullptr);
+            curr -> next = temp;
+            curr = curr -> next;
+            cur_next = cur_next -> next;
+        }
+    }
+    else
+        head = other.head;
+
+    return *this;
 }
 
 void hash_list::reset_iter() {
@@ -209,10 +243,36 @@ void hash_list::reset_iter() {
 }
 
 
-void hash_list::increment_iter() {}
+void hash_list::increment_iter() {
+    /**
+     * @brief Moves the iterator to the next element. If the iterator points to the last element
+     * of the list when this is called the iterator is set to NULL. If the iterator is NULL
+     * when this function is called then this function does nothing
+     */
+    if(iter_ptr == nullptr)
+        iter_ptr = nullptr;
+    else if(iter_ptr -> next == nullptr)
+        iter_ptr = nullptr;
+    else
+        iter_ptr = iter_ptr -> next;
+}
 
 
-std::optional<std::pair<const int *, float *>> hash_list::get_iter_value() { return std::nullopt; }
+std::optional<std::pair<const int *, float *>> hash_list::get_iter_value() { 
+    /**
+     * @brief Return an optional that contains a pointer to the key and a pointer to the value
+     * of the node pointed to by the iterator. If the iterator is NULL this returns
+     * an empty optional
+     * 
+     * @return
+     *  If the iterator is NULL returns an empty optional
+     *  Otherwise returns a pointer to the key/value pointed to by the current iterator
+     */
+    if(iter_ptr == nullptr)
+        return std::nullopt;
+    else
+        return std::pair{&(iter_ptr -> key), &(iter_ptr ->value)};
+}
 
 
 bool hash_list::iter_at_end() { 

@@ -191,6 +191,9 @@ hash_list &hash_list::operator=(const hash_list &other) {
     node *curr;
     node *cur_next;
     node *temp;
+    if(this == &other){ //Special case, handle self assignment
+        return *this;
+    }
     if(head != nullptr){ // need to delete the list first
         curr = head;
         cur_next = head->next;

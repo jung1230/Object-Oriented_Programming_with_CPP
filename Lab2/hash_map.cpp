@@ -1,4 +1,6 @@
 #include "hash_map.h"
+
+
 #include <iostream>
 /**-----------------------------------------------------------------------------------
 * START Part 1
@@ -79,7 +81,23 @@ std::optional<float> get_value(int key) const;
     *  True if key was present
     *  False otherwise
     */
-bool remove(int key);
+bool hash_map::remove(int key){
+    // Calculate the hash index
+    size_t index = std::abs(key) % _capacity; 
+
+    // remove the specific key of the specific index
+    if (_head[index].remove(key)) {
+        removed = true;
+
+        //decrease the number of key/value pairs in the map
+        _size--;
+    } else 
+        removed = false;
+    
+    return removed;
+
+
+}
 
 /**
     * @brief Return the number of key/value pairs in the map
@@ -105,7 +123,33 @@ size_t hash_map::get_capacity() const{
     *  A pointer to an array that has enough space to store all the keys
     *  in the hash_map.
     */
-void get_all_keys(int *keys);
+void hash_map::get_all_keys(int *keys){
+    int curr = 0;
+
+    for(int i = 0; i <  _capacity; i++){
+        // go through every index
+        _head[i].reset_iter();
+
+        while(True){
+            // get the key
+            int* key = _head[i].get_iter_value().value().first;
+
+            // set up keys array
+            keys[curr] = *key;
+            curr += 1;
+
+            // increase iterator
+            _head[i].increment_iter;
+
+            // check if this is the last
+            if(_head[i].iter_at_end)
+                break
+        }
+
+    }
+
+
+}
 
 /**
     * @brief Get the number of elements in each hash_list pointed to by _head.

@@ -1,7 +1,4 @@
 #include "hash_map.h"
-
-
-#include <iostream>
 /**-----------------------------------------------------------------------------------
 * START Part 1
 *------------------------------------------------------------------------------------*/
@@ -44,8 +41,23 @@ hash_map::hash_map(const hash_map &other) {
     *  Returns a reference to the newly constructed hash map. This ensures that
     *  a = b = c works
     */
-hash_map &operator=(const hash_map &other);
-
+hash_map &hash_map::operator=(const hash_map &other){
+    int i;
+    if(this == &other) // Special case: handle self-test
+        return *this;
+    i = 0;
+    // Remove the old data
+    delete[] _head;
+    // initialize _size, _capacity, and _head
+    _size = other._size;
+    _capacity = other._capacity;
+    _head = new hash_list[_capacity];
+    
+    // copy list
+    for (i = 0; i < _capacity; i++) {
+        _head[i] = other._head[i];
+    }
+}
 /**
     * @brief Insert the key/value pair into the map. If the specified key already exists
     * in the map update the associated value, otherwise insert a new key value pair
@@ -55,7 +67,13 @@ hash_map &operator=(const hash_map &other);
     * @param value
     *  The value to insert
     */
-void insert(int key, float value);
+void hash_map::insert(int key, float value){
+    int idx;
+    // Calculate the hash index
+    idx = std::abs(key) % _capacity; 
+    _head[idx].insert(key, value);
+    _size++;
+}
 
 /**
     * @brief Return an optional containing the value associated with the specified key.
@@ -67,7 +85,12 @@ void insert(int key, float value);
     *  An empty optional (if the key isn't in the map), otherwise return an optional
     *  containing the value associated with the specified key
     */
-std::optional<float> get_value(int key) const;
+std::optional<float> hash_map::get_value(int key) const{
+    int idx;
+    // Calculate the hash index
+    idx = std::abs(key) % _capacity;
+    return (_head[idx].get_value(key));
+}
 
 
 
@@ -84,7 +107,7 @@ std::optional<float> get_value(int key) const;
 bool hash_map::remove(int key){
     // Calculate the hash index
     size_t index = std::abs(key) % _capacity; 
-
+    bool removed;
     // remove the specific key of the specific index
     if (_head[index].remove(key)) {
         removed = true;
@@ -130,20 +153,20 @@ void hash_map::get_all_keys(int *keys){
         // go through every index
         _head[i].reset_iter();
 
-        while(True){
+        while(1){
             // get the key
-            int* key = _head[i].get_iter_value().value().first;
+            int key = *_head[i].get_iter_value().value().first;
 
             // set up keys array
-            keys[curr] = *key;
+            keys[curr] = key;
             curr += 1;
 
             // increase iterator
-            _head[i].increment_iter;
+            _head[i].increment_iter();
 
             // check if this is the last
-            if(_head[i].iter_at_end)
-                break
+            if(_head[i].iter_at_end())
+                break;
         }
 
     }
@@ -163,7 +186,13 @@ void hash_map::get_all_keys(int *keys){
     * @param buckets
     *  A pointer to an array that has at least _capacity elements
     */
-void get_bucket_sizes(size_t *buckets);
+void hash_map::get_bucket_sizes(size_t *buckets){
+    int i;
+    for(i = 0; i < _capacity; i++){
+        //go through the array og hash_list and get the size of hash_list
+        buckets[i] = _head[i].get_size();
+    }
+}
 
 /**
     * @brief Frees all memory associated with the map

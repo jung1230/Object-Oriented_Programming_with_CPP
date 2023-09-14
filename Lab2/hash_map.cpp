@@ -57,6 +57,7 @@ hash_map &hash_map::operator=(const hash_map &other){
     for (i = 0; i < _capacity; i++) {
         _head[i] = other._head[i];
     }
+    return *this;
 }
 /**
     * @brief Insert the key/value pair into the map. If the specified key already exists
@@ -155,15 +156,14 @@ void hash_map::get_all_keys(int *keys){
 
         while(1){
             // get the key
-            int key = *_head[i].get_iter_value().value().first;
-
-            // set up keys array
-            keys[curr] = key;
-            curr += 1;
-
+            if(_head[i].get_iter_value() != std::nullopt){
+                // set up keys array
+                int key = *_head[i].get_iter_value().value().first;
+                keys[curr] = key;
+                curr += 1;
+            }
             // increase iterator
             _head[i].increment_iter();
-
             // check if this is the last
             if(_head[i].iter_at_end())
                 break;

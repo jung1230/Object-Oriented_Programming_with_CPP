@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
+    int i;
     // Test Case 1: Creating a hash_map
     std::cout << "enter test case 1 "<< std::endl;
     hash_map map(10);
@@ -20,17 +21,24 @@ int main() {
     std::cout << "enter test case 2 "<< std::endl;
     map.insert(1, 1.1);
     map.insert(2, 2.2);
-    std::cout << "value of key "<<map.get_value(1).value() << std::endl;;
+    map.insert(3, 3.3);
+    std::cout << "value of key "<<map.get_value(1).value() << std::endl;
+    std::cout << "value of key "<<map.get_value(2).value() << std::endl;
+    std::cout << "value of key "<<map.get_value(3).value() << std::endl;
     if(map.get_value(1).value() != float(1.1)){
-        std::cout << "map.get_value(1).value() "<< std::endl;
+        std::cout << "map.get_value(1).value() is wrong"<< std::endl;
         return 0;
     }
     if(map.get_value(2).value()!= float(2.2)){
-        std::cout << "map.get_value(2).value() "<< std::endl;
+        std::cout << "map.get_value(2).value() is wrong"<< std::endl;
+        return 0;
+    }  
+    if(map.get_value(3).value()!= float(3.3)){
+        std::cout << "map.get_value(3).value() is wrong"<< std::endl;
         return 0;
     }   
-    if(map.get_size() != 2){
-        std::cout << "map.get_size() == 2" << std::endl;
+    if(map.get_size() != 3){
+        std::cout << "map.get_size() is wrong" << std::endl;
         return 0;
     }
 
@@ -40,14 +48,14 @@ int main() {
     bool removed = map.remove(1);
 
     if(!removed){
-        std::cout << "removed" << std::endl;
+        std::cout << "removed is wrong" << std::endl;
         return 0;
     }
     if(map.get_value(1).has_value() != false){
         std::cout << "map.get_value(1).has_value() == false" << std::endl;
         return 0;
     }
-    if(map.get_size() != 1){
+    if(map.get_size() != 2){
         std::cout << "map.get_size() == 1" << std::endl;
         return 0;
     }
@@ -55,12 +63,20 @@ int main() {
     std::cout << "enter test case 4 "<< std::endl;
     hash_map map2 = map;
 
-    if(map2.get_size() != 1){
-        std::cout << "map2.get_size() == 1" << std::endl;
+    if(map2.get_size() != 2){
+        std::cout << "map2.get_size() == 2" << std::endl;
+        return 0;
+    }
+    if(map2.get_capacity() != 10){
+        std::cout << "map2.get_capacity() == 10 "<< std::endl;
         return 0;
     }
     if(map2.get_value(2).value()!= float(2.2)){
         std::cout << "map2.get_value(2).value()!= 2.2" << std::endl;
+        return 0;
+    }
+    if(map2.get_value(3).value() != float(3.3)){
+        std::cout << "map2.get_value(3).value() == 3.3" << std::endl;
         return 0;
     }
 
@@ -69,12 +85,20 @@ int main() {
     hash_map map3(5);
     map3 = map2;
 
-    if(map3.get_size() != 1){
-        std::cout << "map3.get_size() == 1" << std::endl;
+    if(map3.get_size() != 2){
+        std::cout << "map3.get_size() == 2" << std::endl;
+        return 0;
+    }
+    if(map3.get_capacity() != 10){
+        std::cout << "map3.get_capacity() == 10 "<< std::endl;
         return 0;
     }
     if(map3.get_value(2).value() != float(2.2)){
         std::cout << "map3.get_value(2).value() == 2.2" << std::endl;
+        return 0;
+    }
+    if(map3.get_value(3).value() != float(3.3)){
+        std::cout << "map3.get_value(3).value() == 3.3" << std::endl;
         return 0;
     }
 
@@ -87,17 +111,19 @@ int main() {
         std::cout << "keys[0] == 2" << std::endl;
         return 0;
     }
+    if(keys[1] != 3){
+        std::cout << "keys[1] == 3" << std::endl;
+        return 0;
+    }
+
 
     // Test Case 7: Getting bucket sizes
     std::cout << "enter test case 7 "<< std::endl;
     size_t buckets[10];
     map3.get_bucket_sizes(buckets);
-
-    if(buckets[0] != 0){
-        std::cout << "buckets[0] == 0" << std::endl;
-        return 0;
+    for(i = 0;i < 10;i ++){
+        std::cout << "Bucket " << i << " has " << buckets[i] << " key/value pairs\n";  
     }
-
     std::cout << "All test cases passed!" << std::endl;
 
     return 0;

@@ -45,13 +45,14 @@ void hash_list::insert(int key, float value) {
     }
     
     //iterate the list to find specific key
-    node *cur = head;
-    while(cur != nullptr){
-        if(cur -> key == key){
-            cur -> value = value;
+    
+    reset_iter();
+    while(!iter_at_end()){
+        if(iter_ptr -> key == key){
+            iter_ptr -> value = value;
             return;
         }
-        cur = cur -> next;
+        increment_iter();
     }
 
     // the key don't exist, insert a new node at the front
@@ -103,17 +104,17 @@ bool hash_list::remove(int key) {
         return false;
     }
     //iterate the list to find specific node containing the key
-    node *cur =head;
-    while(cur != nullptr){
-        if(cur -> key == key){ // if find the node, delete it and return true
-            prev -> next = cur-> next;
+    reset_iter();
+    while(!iter_at_end()){
+        if(iter_ptr -> key == key){ // if find the node, delete it and return true
+            prev -> next = iter_ptr-> next;
             head = dummy.next;
             size --;
-            delete cur;
+            delete iter_ptr;
             return true;
         }
-        prev = cur;
-        cur = cur -> next;
+        prev = iter_ptr;
+        iter_ptr = iter_ptr -> next;
     }
     //After travering the whole list, if the node is not found, return false
     return false; 
@@ -127,13 +128,14 @@ size_t hash_list::get_size() const {
 // destructor for hash list (remember to write commands, Peter. Thank you for your cooporation)
 hash_list::~hash_list() {
     if(head != nullptr){
-        node *cur = head->next;
+        reset_iter();
+        iter_ptr = head->next;
         while(head != nullptr){ 
             delete head;
             size --;
-            head = cur;
+            head = iter_ptr;
             if(head != nullptr)
-                cur = head -> next;
+                increment_iter();
         }
     }
 }
@@ -166,6 +168,7 @@ hash_list::hash_list(const hash_list &other) {
         node *cur_other = other.head -> next;
         node *cur_new = head;
         node *temp;
+        
         while(cur_other != nullptr){
             temp = new node(cur_other -> key, cur_other -> value, nullptr);
             cur_new -> next = temp;
@@ -175,6 +178,7 @@ hash_list::hash_list(const hash_list &other) {
     }
     else
         head = other.head;
+    
 
 }
 
@@ -284,7 +288,7 @@ bool hash_list::iter_at_end() {
      * 
      * @return
      *  True if the iterator is NULL
-     *  False otherwise
+     *  False otherwisecur
      */
     if (iter_ptr == nullptr)
         return true;

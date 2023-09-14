@@ -42,7 +42,7 @@ hash_map::hash_map(const hash_map &other) {
     *  a = b = c works
     */
 hash_map &hash_map::operator=(const hash_map &other){
-    int i;
+    size_t i;
     if(this == &other) // Special case: handle self-test
         return *this;
     i = 0;
@@ -149,7 +149,7 @@ size_t hash_map::get_capacity() const{
 void hash_map::get_all_keys(int *keys){
     int curr = 0;
 
-    for(int i = 0; i <  _capacity; i++){
+    for(size_t i = 0; i <  _capacity; i++){
         // go through every index
         _head[i].reset_iter();
 
@@ -170,8 +170,6 @@ void hash_map::get_all_keys(int *keys){
         }
 
     }
-
-
 }
 
 /**
@@ -187,7 +185,7 @@ void hash_map::get_all_keys(int *keys){
     *  A pointer to an array that has at least _capacity elements
     */
 void hash_map::get_bucket_sizes(size_t *buckets){
-    int i;
+    size_t i;
     for(i = 0; i < _capacity; i++){
         //go through the array og hash_list and get the size of hash_list
         buckets[i] = _head[i].get_size();

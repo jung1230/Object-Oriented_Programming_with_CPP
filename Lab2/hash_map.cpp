@@ -73,8 +73,10 @@ void hash_map::insert(int key, float value){
     // Calculate the hash index
     idx = std::abs(key) % _capacity; 
     if(_head[idx].get_value(key))
+        //There is already a key in hash list
         _head[idx].insert(key, value);
     else{
+        //Insert new key
         _head[idx].insert(key, value);
         _size++;
     }

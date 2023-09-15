@@ -1,17 +1,7 @@
 #include "hash_list.h"
-#include <iostream>
 /**-----------------------------------------------------------------------------------
  * START Part 1
  *------------------------------------------------------------------------------------*/
-
-void display(struct node* node){
-  while (node != nullptr){
-    std::cout << node->key << " "<< node->value << " "<< std::endl;
-    node = node->next;
-  }
-  std::cout <<"end of display\n"<< std::endl;
-}
-
 
  // constructor, initiallize the list of size, head, iand iter_ptr
 hash_list::hash_list() {

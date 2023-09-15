@@ -72,8 +72,12 @@ void hash_map::insert(int key, float value){
     int idx;
     // Calculate the hash index
     idx = std::abs(key) % _capacity; 
-    _head[idx].insert(key, value);
-    _size++;
+    if(_head[idx].get_value(key))
+        _head[idx].insert(key, value);
+    else{
+        _head[idx].insert(key, value);
+        _size++;
+    }
 }
 
 /**

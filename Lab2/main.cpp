@@ -61,6 +61,19 @@ int main() {
         std::cout << "map.get_size() == 1" << std::endl;
         return 0;
     }
+    removed = map.remove(1);
+    if(removed){
+        std::cout << "removed is wrong" << std::endl;
+        return 0;
+    }
+    if(map.get_value(1).has_value() != false){
+        std::cout << "map.get_value(1).has_value() == false" << std::endl;
+        return 0;
+    }
+    if(map.get_size() != 2){
+        std::cout << "map.get_size() == 1" << std::endl;
+        return 0;
+    }
     // Test Case 4: Copy constructor
     std::cout << "enter test case 4 "<< std::endl;
     hash_map map2 = map;

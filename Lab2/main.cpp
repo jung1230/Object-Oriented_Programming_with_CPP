@@ -20,7 +20,9 @@ int main() {
     // Test Case 2: Inserting and getting values
     std::cout << "enter test case 2 "<< std::endl;
     map.insert(1, 1.1);
+    map.insert(2, 8.7);
     map.insert(2, 2.2);
+    map.insert(3, 6.9);
     map.insert(3, 3.3);
     std::cout << "value of key "<<map.get_value(1).value() << std::endl;
     std::cout << "value of key "<<map.get_value(2).value() << std::endl;

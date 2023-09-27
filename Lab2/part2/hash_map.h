@@ -145,6 +145,19 @@ private:
     /** Built in hashing function for type K */
     std::hash<K> _hash;
 
+    /** 
+     * @brief Detect whether there is need to rehash the hash map
+     */
+    int need_to_rehash();
+
+    /** 
+     * @brief Rehash the hash map
+     * 
+     * @param need
+     * The indicator of decreasing or increasing the size of map
+     */
+    void rehash(int need);
+
     /**
      * The capacities that we're using for re-sizing. This needs to be set to
      * {209, 1021, 2039}. We've defined this below for you

@@ -7,27 +7,29 @@
 
 
 template <typename K, typename V>
+struct node
+{
+    /** The key the node is storing */
+    K key;
+
+    /** the value the node is storing */
+    V value;
+
+    /** a pointer to the next node */
+    node *next;
+
+    // this is an constructor for node, this help to initialize the node
+    node(K key, V value, node *next) : key(key), value(value), next(next) {}
+};
+
+
+template <typename K, typename V>
 class hash_list
 {
     /** A single key/value pair in the linked list */
-    struct node
-    {
-        /** The key the node is storing */
-        int key;
-
-        /** the value the node is storing */
-        float value;
-
-        /** a pointer to the next node */
-        node *next;
-
-        // this is an constructor for node, this help to initialize the node
-        node(int key, float value, node *next) : key(key), value(value), next(next) {}
-    };
+    
 
     /** A list that stores key/value pairs */
-    class hash_list
-    {
 
     public:
 
@@ -51,7 +53,7 @@ class hash_list
         * @param value
         *  The value to insert into the list
         */
-        void insert(int key, float value);
+        void insert(K key, V value);
 
         /**
         * @brief Return an optional containing the value associated with the specified key. If the key
@@ -76,7 +78,7 @@ class hash_list
         *  True if the key was removed from the list
         *  False if the key wasn't in the list
         */
-        bool remove(int key);
+        bool remove(K key);
 
         /**
         * @brief Return the number of nodes in the list. 
@@ -143,7 +145,7 @@ class hash_list
         *  If the iterator is NULL returns an empty optional
         *  Otherwise returns a pointer to the key/value pointed to by the current iterator
         */
-        std::optional<std::pair<const int *, float *>> get_iter_value();
+        std::optional<std::pair<const K *, V *>> get_iter_value();
 
         /**
         * @brief Returns true if the iterator is NULL
@@ -163,11 +165,10 @@ class hash_list
         size_t size;
 
         /** A pointer to the first node in the list */
-        node *head;
+        node<K, V> *head;
 
         /** The node that the iterator is currently pointing to */
-        node *iter_ptr;
-    };
+        node<K, V> *iter_ptr;
 };
 
 #include "hash_list.hpp"

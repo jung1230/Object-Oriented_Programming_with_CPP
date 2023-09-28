@@ -125,6 +125,7 @@ std::optional<V> hash_map<K, V>::get_value(K key) const{
     */
 template <typename K, typename V>
 bool hash_map<K, V>::remove(K key){
+    int need;
     // Calculate the hash index
     size_t index =  _hash(key) % _capacity;
     bool removed;
@@ -136,7 +137,8 @@ bool hash_map<K, V>::remove(K key){
         _size--;
     } else 
         removed = false;
-    
+    need = need_to_rehash(); // Check whether there is need to rehash
+    rehash(need); // Rehash
     return removed;
 }
 

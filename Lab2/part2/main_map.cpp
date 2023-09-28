@@ -38,7 +38,11 @@ int main() {
     if(map.get_value(3).value()!= float(3.3)){
         std::cout << "map.get_value(3).value() is wrong"<< std::endl;
         return 0;
-    }   
+    }  
+    if(map.get_value(4) != std::nullopt){
+        std::cout << "map.get_value(4) is wrong"<< std::endl;
+        return 0;
+    }
     if(map.get_size() != 3){
         std::cout << "map.get_size() is wrong" << std::endl;
         return 0;
@@ -117,8 +121,28 @@ int main() {
         return 0;
     }
 
-    // Test Case 6: Copying keys to an array
+    // Test Case 6: Copy constructor
     std::cout << "enter test case 6 "<< std::endl;
+    hash_map<int, float> map4(map3);
+    if(map4.get_size() != 2){
+        std::cout << "map4.get_size() == 2" << std::endl;
+        return 0;
+    }
+    if(map4.get_capacity() != 10){
+        std::cout << "map4.get_capacity() == 10 "<< std::endl;
+        return 0;
+    }
+    if(map4.get_value(2).value() != float(2.2)){
+        std::cout << "map4.get_value(2).value() == 2.2" << std::endl;
+        return 0;
+    }
+    if(map4.get_value(3).value() != float(3.3)){
+        std::cout << "map4.get_value(3).value() == 3.3" << std::endl;
+        return 0;
+    }
+
+    // Test Case 7: Copying keys to an array
+    std::cout << "enter test case 7 "<< std::endl;
     int keys[10];
     map3.get_all_keys(keys);
 
@@ -132,15 +156,38 @@ int main() {
     }
 
 
-    // Test Case 7: Getting bucket sizes
-    std::cout << "enter test case 7 "<< std::endl;
+    // Test Case 8: Getting bucket sizes
+    std::cout << "enter test case 8 "<< std::endl;
     size_t buckets[10];
     map3.get_bucket_sizes(buckets);
     for(i = 0;i < 10;i ++){
         std::cout << "Bucket " << i << " has " << buckets[i] << " key/value pairs\n";  
     }
-    std::cout << "All test cases passed!" << std::endl;
 
+    // Test Case 9: Test Rehash method
+    std::cout << "enter test case 9 "<< std::endl;
+    std::cout << "Previous capacity of map 3: " << map3.get_capacity()<< std::endl;
+    for(i = 0; i < 900; i++){
+        map3.insert(i, 6.9);
+    }
+    std::cout << "Current capacity of map 3 after inserting 1021 key-value pair: " << map3.get_capacity()<< std::endl;
+    std::cout << "Current size of map 3 after inserting 1021 key-value pair: " << map3.get_size()<< std::endl;
+    for(i = 0; i < 650; i++){
+        map3.remove(i);
+    }
+    std::cout << "Current capacity of map 3 after deletion 650 key-value pair: " << map3.get_capacity()<< std::endl;
+    std::cout << "Current size of map 3 after deletion 650 key-value pair: " << map3.get_size()<< std::endl;
+
+    // Test Case  10: Test all sorted keys
+    std::cout << "enter test case 9 "<< std::endl;
+    int skey[250];
+    map3.get_all_sorted_keys(skey);
+    std::cout << "Sorted Key:" << std::endl;
+    for(i = 0; i < 250; i++){
+        std::cout << skey[i] << std::endl;
+    }
+
+    std::cout << "All test cases passed!" << std::endl;
     return 0;
 }
 

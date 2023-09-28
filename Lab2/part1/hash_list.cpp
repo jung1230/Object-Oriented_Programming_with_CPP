@@ -278,7 +278,7 @@ bool hash_list::iter_at_end() {
      * 
      * @return
      *  True if the iterator is NULL
-     *  False otherwisecur
+     *  False otherwise
      */
     if (iter_ptr == nullptr)
         return true;

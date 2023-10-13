@@ -1,35 +1,23 @@
 #include "ItemD.h"
-#include <iostream>
 
-int ItemD::getNumberOfItems( ) {
-  //std::cout << itemNum << std::endl;
-  return derivednumberOfItems;
+int ItemD::numberOfItemsD = 0;
+
+int ItemD::getNumberOfItemsD() {
+    return numberOfItemsD;
 }
 
-ItemD::ItemD(int i, float p) : Item(i,p) {
-   derivednumberOfItems++;
+ItemD::ItemD(int i, float p) : Item(i, p) {
+    numberOfItemsD++;
 }
 
-
-ItemD::ItemD(const ItemD& itemD) :Item(itemD){
-   derivednumberOfItems++;
-
+ItemD::ItemD() : Item() {
+    numberOfItemsD++;
 }
 
-
-ItemD::ItemD( ) {
-  derivednumberOfItems++;
- }
-
-ItemD::~ItemD( ) {
-  derivednumberOfItems--;
+ItemD::ItemD(const ItemD& item) : Item(item) { //use the copy constructor in item.cpp
+    numberOfItemsD++;
 }
 
-void ItemD::print( ) {
-   std::cout << "number of items: " << derivednumberOfItems;
-   std::cout << ", item number: " << itemNum;
-   std::cout << ", price: " << price << std::endl;
+ItemD::~ItemD() {
+    numberOfItemsD--;
 }
-
-int ItemD::derivednumberOfItems = 0; // initialize statics like this
-

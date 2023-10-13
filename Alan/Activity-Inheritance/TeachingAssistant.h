@@ -10,8 +10,9 @@ class TeachingAssistant : public Student{
         std::string course;
     
     public:
-        TeachingAssistant(std::string _course);
+        TeachingAssistant(float _gpa, std::string name, std::string _course);
         virtual std::string getCourse();
+        void Print();
 };
 
 #endif

@@ -9,11 +9,11 @@ int main(int argc, char* argv[ ]) {
    p.Print();
    std::cout << "Name = " << s.getName() << " GPA = " << s.getGPA() << std::endl;
 
-   // part 2
-    // std::cout << "part 2" << std::endl;
+   // // part 2
+   // std::cout << "part 2" << std::endl;
    // Person *personPtr;
    // Student *studentPtr;
-   // studentPtr = &p; // compiler will complain about this (person is a base class)
+   // //studentPtr = &p; // compiler will complain about this (person is a base class)
    // personPtr = &s;
 
    // part 3
@@ -29,5 +29,6 @@ int main(int argc, char* argv[ ]) {
    // part 4
    std::cout << "part 4" << std::endl;
    TeachingAssistant ta1 = TeachingAssistant(4, "Alan", "oo programing");
+   ta1.Print();
 
 }

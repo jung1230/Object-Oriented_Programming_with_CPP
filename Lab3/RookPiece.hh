@@ -11,6 +11,12 @@ namespace Student
 {
     class RookPiece : public ChessPiece
     {
+        public:
+            RookPiece(ChessBoard& board, Color color, int row, int column);
+
+            Type getType() override;
+            bool canMoveToLocation(int toRow, int toColumn) override;
+            const char* toString() override;
     };
 }
 

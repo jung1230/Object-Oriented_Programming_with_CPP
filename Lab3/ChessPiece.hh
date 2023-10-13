@@ -3,12 +3,21 @@
 
 #include "Chess.h"
 
-    namespace Student
+namespace Student
 {
   class ChessBoard;
 
   class ChessPiece
   {
+
+    // Alan : add private for chesspiece
+  private:
+    ChessBoard& _board;  
+    Color _color;
+    int _row;
+    int _column;
+
+  
   public:
     /**
      * @brief
@@ -44,7 +53,9 @@
      * would have been to define this function as pure virtual and
      * let each derived class override this function.
      */
-    Type getType();
+     
+     // Alan : Change this to pure virtual func
+    virtual Type getType() = 0;
 
     /**
      * @return

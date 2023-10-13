@@ -38,7 +38,10 @@ void CompoundShapes(){
   cout << "Area = " << shape[3]->area() 
        << " Circumference = " << shape[3]->circumference() 
        << endl;
-
+  // Clean up dynamically allocated objects
+  for(int i = 0; i < 4; i++) {
+    delete shape[i];
+  }
 }
 
 int main() {

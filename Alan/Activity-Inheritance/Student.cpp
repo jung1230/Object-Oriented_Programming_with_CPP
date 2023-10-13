@@ -12,6 +12,6 @@ float Student::getGPA( ) {
 
 void Student::Print(){
 
-   std::cout << this -> getName() << gpa << std::endl;
+   std::cout << getName() << gpa << std::endl;
 
 }

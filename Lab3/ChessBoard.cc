@@ -154,3 +154,12 @@ void ChessBoard::createChessPiece(Color col, Type ty, int startRow, int startCol
     board[startRow][startColumn] = new_piece;
 }
 
+bool ChessBoard::isPieceUnderThreat(int row, int col) {
+    // dummy implementation
+    return false;
+}
+
+bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
+    // dummy implementation
+    return true;
+}

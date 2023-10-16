@@ -10,15 +10,17 @@
 using Student::ChessBoard;
 
 /**
-         * @brief
-         * Allocates memory on the heap for the board.
-         * Remember to initialise all pointers to nullptr.
-         * @param numRow
-         * Number of rows of the chess board.
-         * @param numCol
-         * Number of columns of the chessboard
-         */
+ * @brief
+ * Allocates memory on the heap for the board.
+ * Remember to initialise all pointers to nullptr.
+ * @param numRow
+ * Number of rows of the chess board.
+ * @param numCol
+ * Number of columns of the chessboard
+ */
 ChessBoard::ChessBoard(int numRow, int numCol){
+    numRows = numRow;
+    numCols = numCol;
     for(int i = 0; i < numRow; i++){
         board.push_back(std::vector<ChessPiece *>(numCol));
         for(int j = 0; j < numCol; j++){
@@ -28,13 +30,13 @@ ChessBoard::ChessBoard(int numRow, int numCol){
 }
 
 /**
-         * @brief
-         * Returns an output string stream displaying the layout of the board.
-         * An ostringstream is used to automatically handle formatting of integers
-         * and special characters into their string representations.
-         * @return
-         * An output stream containing the full board layout.
-         */
+ * @brief
+ * Returns an output string stream displaying the layout of the board.
+ * An ostringstream is used to automatically handle formatting of integers
+ * and special characters into their string representations.
+ * @return
+ * An output stream containing the full board layout.
+ */
 std::ostringstream ChessBoard::displayBoard()
 {
     std::ostringstream outputString;
@@ -77,25 +79,42 @@ std::ostringstream ChessBoard::displayBoard()
 }
 
 /**
-         * @brief
-         * Checks if a move is valid without accounting for turns.
-         * @param fromRow
-         * The row of the piece to be moved.
-         * @param fromColumn
-         * The column of the piece to be moved.
-         * @param toRow
-         * The row of the destination position.
-         * @param toColumn
-         * The column of the destination position.
-         * @return
-         * Returns true if move may be executed without accounting for turn.
-         */
+ * @brief
+ * Checks if a move is valid without accounting for turns.
+ * @param fromRow
+ * The row of the piece to be moved.
+ * @param fromColumn
+ * The column of the piece to be moved.
+ * @param toRow
+ * The row of the destination position.
+ * @param toColumn
+ * The column of the destination position.
+ * @return
+ * Returns true if move may be executed without accounting for turn.
+ */
 bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColumn){
     // First, Check whether it is in the bound
-
+    if((fromRow < 0) || (fromColumn < 0) || (toRow < 0) || (toColumn < 0))
+        return false;
+    if((fromRow >= numRows) || (toRow >= numRows) || (fromColumn >= numCols) || (toColumn >= numCols))
+        return false;
+    // Then Check whether there is a piece at the fromRow and fromColumn
+    if(board.at(fromRow).at(fromColumn) == nullptr)
+        return false;
     // Then, Check whether the piece is at the same place
+    if((fromRow == toRow) && (fromColumn == toColumn))
+        return false;
+    // Then Check the piece moved is the right color
+    if(board.at(fromRow).at(fromColumn)->getColor() != turn)
+        return false;
     // Next, Check the destination is same color
+    if(board.at(toRow).at(toColumn)->getColor() == turn)
+        return false;
     // Then use piece's canMoveToLocation to check
+    if(board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn))
+        return true;
+    else
+        return false;
 }
 
 /**

@@ -2,17 +2,21 @@
 #define _CHESSPIECE_H__
 
 #include "Chess.h"
+#include "ChessBoard.hh"
+
+using Student::ChessBoard;
 
 namespace Student
 {
-  class ChessBoard;
+  //class ChessBoard;
 
   class ChessPiece
   {
 
     // Alan : add private for chesspiece
-  private:
-    ChessBoard& _board;  
+  protected:
+    ChessBoard& _board;
+  private:  
     Color _color;
     int _row;
     int _column;

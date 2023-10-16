@@ -1,11 +1,31 @@
 #include "ChessBoard.hh"
 #include "Chess.h"
+#include "vector"
 #include "PawnPiece.hh"
 #include "RookPiece.hh"
 #include "BishopPiece.hh"
 #include "KingPiece.hh"
+#include <iostream>
 
 using Student::ChessBoard;
+
+/**
+         * @brief
+         * Allocates memory on the heap for the board.
+         * Remember to initialise all pointers to nullptr.
+         * @param numRow
+         * Number of rows of the chess board.
+         * @param numCol
+         * Number of columns of the chessboard
+         */
+ChessBoard::ChessBoard(int numRow, int numCol){
+    for(int i = 0; i < numRow; i++){
+        board.push_back(std::vector<ChessPiece *>(numCol));
+        for(int j = 0; j < numCol; j++){
+            board.at(i).at(j) = nullptr;
+        }
+    }
+}
 
 /**
          * @brief
@@ -72,6 +92,7 @@ std::ostringstream ChessBoard::displayBoard()
          */
 bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColumn){
     // First, Check whether it is in the bound
+
     // Then, Check whether the piece is at the same place
     // Next, Check the destination is same color
     // Then use piece's canMoveToLocation to check

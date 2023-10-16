@@ -132,6 +132,34 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
          * Starting column of the piece to be created.
          */
 void ChessBoard::createChessPiece(Color col, Type ty, int startRow, int startColumn){
+    //  Remove any existing piece first before adding the new piece.
+    ChessPiece* existing_piece = getPiece(startRow, startColumn);
+    if (existing_piece != nullptr) {
+        delete existing_piece; // Delete the existing piece
+    }
 
+    // adding new piece with its type
+    ChessPiece* new_piece = nullptr;
+    if (ty == Pawn) { 
+        new_piece = new PawnPiece(*this, col, startRow, startColumn);
+    }
+    else if (ty == Bishop) { 
+        new_piece = new BishopPiece(*this, col, startRow, startColumn);
+    }
+    else if (ty == Rook) { 
+        new_piece = new RookPiece(*this, col, startRow, startColumn);
+    }
+
+    // Put the new piece on the board
+    board[startRow][startColumn] = new_piece;
 }
 
+bool ChessBoard::isPieceUnderThreat(int row, int col) {
+    // dummy implementation
+    return false;
+}
+
+bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
+    // dummy implementation
+    return true;
+}

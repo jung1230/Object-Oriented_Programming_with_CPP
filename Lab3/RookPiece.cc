@@ -20,9 +20,45 @@ bool RookPiece::canMoveToLocation(int row, int col){
     int move_col = col - getColumn();
 
     // Rook can only move horizontally or vertically
-    return (move_row == 0 && move_col != 0) || (move_row != 0 && move_col == 0);
+    if (move_row != 0 && move_col != 0) {
+        return false; // Not a valid rook move
+    }
+    // check for if there is a piece blocking the path
+    if (move_row > 0) {
+        for (int i = 1; i < move_row; i++) {
+            if (_board.getPiece(getRow() + i, getColumn()) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_row < 0) {
+        for (int i = -1; i > move_row; i--) {
+            if (_board.getPiece(getRow() + i, getColumn()) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_col > 0) {
+        for (int i = 1; i < move_col; i++) {
+            if (_board.getPiece(getRow(), getColumn() + i) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_col < 0) {
+        for (int i = -1; i > move_col; i--) {
+            if (_board.getPiece(getRow(), getColumn() + i) != nullptr) {
+                return false; 
+            }
+        }
+    }
+
+    return true;
 }
 
 const char* RookPiece::toString(){
-    return ("U+265C");
+    if(getColor() == Color::Black)
+        return ("U+265D");
+    else
+        return ("U+2657");
 }

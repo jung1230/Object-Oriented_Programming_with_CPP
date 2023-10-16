@@ -1,6 +1,7 @@
 #ifndef _CHESSBOARD_H__
 #define _CHESSBOARD_H__
 
+#include "Chess.h"
 #include "ChessPiece.hh"
 #include "KingPiece.hh"
 #include <list>
@@ -9,6 +10,8 @@
 
 namespace Student
 {
+    class ChessPiece;
+
     class ChessBoard
     {
     private:

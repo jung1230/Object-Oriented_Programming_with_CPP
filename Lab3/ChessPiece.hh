@@ -4,11 +4,10 @@
 #include "Chess.h"
 #include "ChessBoard.hh"
 
-using Student::ChessBoard;
 
 namespace Student
 {
-  //class ChessBoard;
+  class ChessBoard;
 
   class ChessPiece
   {

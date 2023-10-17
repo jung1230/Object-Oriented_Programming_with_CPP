@@ -1,5 +1,5 @@
 #include "PawnPiece.hh"
-
+#include <iostream>
 using Student::PawnPiece;
 
 PawnPiece::PawnPiece(ChessBoard& board, Color color, int row, int column): ChessPiece(board, color, row, column){
@@ -21,7 +21,8 @@ bool PawnPiece::canMoveToLocation(int row, int col)
             return false;
         }
         // can only move 2 row for the first time
-        if (move_row == 2 && getRow() != 1){
+        if (move_row == 2 && move_count != 0){
+
             return false; 
         }
     }
@@ -31,7 +32,7 @@ bool PawnPiece::canMoveToLocation(int row, int col)
             return false;
         }
         // can only move 2 row for the first time
-        if (move_row == -2 && getRow() != (_board.getNumRows() - 2)){
+        if (move_row == -2 && move_count != 0){
             return false; 
         }
     }

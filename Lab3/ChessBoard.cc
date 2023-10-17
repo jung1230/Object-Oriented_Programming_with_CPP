@@ -104,6 +104,9 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
        return false;
 
     }
+    // Then, check whether the start is nullptr
+    if(board.at(fromRow).at(fromColumn) == nullptr)
+        return false;
     // Then Check whether there is a piece at the fromRow and fromColumn
     if(board.at(fromRow).at(fromColumn) == nullptr){
          std::cout << "3" << std::endl;
@@ -127,14 +130,12 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
     std::cout << "13" << std::endl;
     // Next, Check the destination is same color
     // seg falut here
-    if(toRow > numRows || toColumn > numCols)
-        return false;
-
-    if(board.at(toRow).at(toColumn)->getColor() == turn){
-        std::cout << "6" << std::endl;
-        return false;
+    if(board.at(toRow).at(toColumn) != nullptr){
+        if(board.at(toRow).at(toColumn)->getColor() == turn){
+            std::cout << "6" << std::endl;
+            return false;
+        }
     }
-    
     // Then use piece's canMoveToLocation to check
     if(board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn)){
         std::cout << "7" << std::endl;

@@ -127,6 +127,9 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
     std::cout << "13" << std::endl;
     // Next, Check the destination is same color
     // seg falut here
+    if(toRow > numRows || toColumn > numCols)
+        return false;
+
     if(board.at(toRow).at(toColumn)->getColor() == turn){
         std::cout << "6" << std::endl;
         return false;

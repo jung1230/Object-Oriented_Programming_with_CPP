@@ -95,12 +95,10 @@ std::ostringstream ChessBoard::displayBoard()
 bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColumn){
     // First, Check whether it is in the bound
     if((fromRow < 0) || (fromColumn < 0) || (toRow < 0) || (toColumn < 0)){
-        std::cout << "1" << std::endl;
         return false;
 
     }
     if((fromRow >= numRows) || (toRow >= numRows) || (fromColumn >= numCols) || (toColumn >= numCols)){
-         std::cout << "2" << std::endl;
        return false;
 
     }
@@ -109,36 +107,28 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
         return false;
     // Then Check whether there is a piece at the fromRow and fromColumn
     if(board.at(fromRow).at(fromColumn) == nullptr){
-         std::cout << "3" << std::endl;
        return false;
 
     }
-    std::cout << "11" << std::endl;
     // Then, Check whether the piece is at the same place
     if((fromRow == toRow) && (fromColumn == toColumn)){
-         std::cout << "4" << std::endl;
        return false;
 
     }
-    std::cout << "12" << std::endl;
     // Then Check the piece moved is the right color
     if(board.at(fromRow).at(fromColumn)->getColor() != turn){
-        std::cout << "5" << std::endl;
         return false;
 
     }
-    std::cout << "13" << std::endl;
     // Next, Check the destination is same color
     // seg falut here
     if(board.at(toRow).at(toColumn) != nullptr){
         if(board.at(toRow).at(toColumn)->getColor() == turn){
-            std::cout << "6" << std::endl;
             return false;
         }
     }
     // Then use piece's canMoveToLocation to check
     if(board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn)){
-        std::cout << "7" << std::endl;
         return true;
 
     }

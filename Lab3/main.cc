@@ -41,13 +41,23 @@ void unit_isValidMove_bishop_one() {
 	assert(!board.isValidMove(0, 0, 1, 2));
 	assert(!board.isValidMove(0, 0, -1, -1));
 }
+void unit_isValidMove_Rook() {
+	Student::ChessBoard board(4, 4);
+	board.createChessPiece(White, Rook, 0, 0);
+	
 
+	assert(board.isValidMove(0, 0, 3, 0));
+    assert(board.isValidMove(0, 0, 0, 3));
+    assert(!board.isValidMove(0, 0, 3, 3));
+	assert(!board.isValidMove(0, 0, 1, 2));
+	assert(!board.isValidMove(0, 0, -1, -1));
+}
 
 
 int main()
 {
     unit_isValidMove_bishop_one();
- 
+    unit_isValidMove_Rook();
     //test_part1_4x4_1();
     return EXIT_SUCCESS;
 }

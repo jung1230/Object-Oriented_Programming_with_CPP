@@ -11,6 +11,8 @@ namespace Student
 {
     class PawnPiece : public ChessPiece
     {
+        private:
+            int move_count = 0;
         public:
             PawnPiece(ChessBoard& board, Color color, int row, int column);
             Type getType() override;

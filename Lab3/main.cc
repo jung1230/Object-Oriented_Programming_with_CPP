@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <iostream>
 #include "Chess.h"
 #include "ChessBoard.hh"
 #include "ChessPiece.hh"
@@ -28,8 +29,25 @@ void test_part1_4x4_1()
     return;
 }
 
+
+
+// ------------------------------ chessboard ------------------------------
+void unit_isValidMove_bishop_one() {
+	Student::ChessBoard board(4, 4);
+	board.createChessPiece(White, Bishop, 0, 0);
+	
+
+	assert(board.isValidMove(0, 0, 3, 3));
+	assert(!board.isValidMove(0, 0, 1, 2));
+	assert(!board.isValidMove(0, 0, -1, -1));
+}
+
+
+
 int main()
 {
-    test_part1_4x4_1();
+    unit_isValidMove_bishop_one();
+ 
+    //test_part1_4x4_1();
     return EXIT_SUCCESS;
 }

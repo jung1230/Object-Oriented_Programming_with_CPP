@@ -87,7 +87,7 @@ void test_part1_4x4_7(){
     // other position on the chess board for all pieces.
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            std::cout << sBoard.isValidMove(1,0,i,j) << " ";
+            std::cout << sBoard.isValidMove(3,2,i,j) << " ";
         }
         std::cout << std::endl;
     }
@@ -158,6 +158,6 @@ int main()
     //unit_isValidMove_Rook();
     //unit_isValidMove_Pawn();
     //test_part1_4x4_1();
-    test_part1_6x6_2();
+    test_part1_4x4_7();
     return EXIT_SUCCESS;
 }

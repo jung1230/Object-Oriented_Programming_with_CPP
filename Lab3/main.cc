@@ -75,6 +75,26 @@ void test_part1_4x4_3(){
     return;
 }
 
+void test_part1_4x4_5(){
+    // Corresponding code
+    Student::ChessBoard sBoard(4, 4);
+    sBoard.createChessPiece(Black, Bishop, 0, 1);
+    sBoard.createChessPiece(Black, Bishop, 1, 1);
+    sBoard.createChessPiece(Black, Bishop, 2, 1);
+    sBoard.createChessPiece(White, Pawn, 2, 0);
+
+    // Calls isValidMove() from every position to every
+    // other position on the chess board for all pieces.
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isValidMove(2,0,i,j) << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    return;
+}
+
 void test_part1_4x4_7(){
     // Corresponding code
     Student::ChessBoard sBoard(4, 4);
@@ -158,6 +178,6 @@ int main()
     //unit_isValidMove_Rook();
     //unit_isValidMove_Pawn();
     //test_part1_4x4_1();
-    test_part1_4x4_7();
+    test_part1_4x4_5();
     return EXIT_SUCCESS;
 }

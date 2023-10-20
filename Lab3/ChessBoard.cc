@@ -5,7 +5,6 @@
 #include "RookPiece.hh"
 #include "BishopPiece.hh"
 #include "KingPiece.hh"
-#include <iostream>
 
 using Student::ChessBoard;
 

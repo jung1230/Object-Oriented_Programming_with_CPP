@@ -37,7 +37,7 @@ bool PawnPiece::canMoveToLocation(int row, int col)
             return false;
         }
         // can only move 2 row for the first time
-        if (move_row == 2 && move_count != 0){
+        if (move_row == 2 && getRow() != 1){
             return false; 
         }
         // check if there is piece on path
@@ -64,7 +64,7 @@ bool PawnPiece::canMoveToLocation(int row, int col)
             return false;
         }
         // can only move 2 row for the first time
-        if (move_row == -2 && move_count != 0){
+        if (move_row == -2 && getRow() != (_board.getNumRows()-1)){
             return false; 
         }
         // check if there is piece on path
@@ -83,10 +83,4 @@ const char* PawnPiece::toString()
         return "\u265F";
     else
         return "\u2659";
-}
-
-void PawnPiece::setPosition(int row, int column){
-    _row = row;
-    _column = column;
-    move_count = 1;
 }

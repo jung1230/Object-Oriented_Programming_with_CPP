@@ -1,5 +1,4 @@
 #include "BishopPiece.hh"
-#include <iostream>
 
 using Student::BishopPiece;
 

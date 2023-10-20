@@ -102,13 +102,9 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
        return false;
 
     }
-    // Then, check whether the start is nullptr
-    if(board.at(fromRow).at(fromColumn) == nullptr)
-        return false;
     // Then Check whether there is a piece at the fromRow and fromColumn
     if(board.at(fromRow).at(fromColumn) == nullptr){
        return false;
-
     }
     // Then, Check whether the piece is at the same place
     if((fromRow == toRow) && (fromColumn == toColumn)){
@@ -116,17 +112,17 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
 
     }
     // Then Check the piece moved is the right color
-    if(board.at(fromRow).at(fromColumn)->getColor() != turn){
+    // Don't need to account for turn in part 1
+    /*if(board.at(fromRow).at(fromColumn)->getColor() != turn){
         return false;
 
-    }
+    }*/
     // Next, Check the destination is same color
-    // seg falut here
-    if(board.at(toRow).at(toColumn) != nullptr){
+    /*if(board.at(toRow).at(toColumn) != nullptr){
         if(board.at(toRow).at(toColumn)->getColor() == turn){
             return false;
         }
-    }
+    }*/
     // Then use piece's canMoveToLocation to check
     if(board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn)){
         return true;
@@ -181,4 +177,13 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
 bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
     // dummy implementation
     return true;
+}
+
+ChessBoard::~ChessBoard(){
+    for(int i = 0; i < numRows; i++){
+        for(int j = 0; j < numCols; j++){
+            if(board.at(i).at(j) != nullptr)
+                delete board.at(i).at(j);
+        }
+    }
 }

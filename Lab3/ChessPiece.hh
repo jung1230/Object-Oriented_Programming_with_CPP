@@ -13,9 +13,9 @@ namespace Student
   {
 
     // Alan : add private for chesspiece
+    // Set the variable to private because pawn need to access these variable in its set_position method
   protected:
     ChessBoard& _board;
-  private:  
     Color _color;
     int _row;
     int _column;

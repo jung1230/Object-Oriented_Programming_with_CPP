@@ -52,13 +52,21 @@ bool RookPiece::canMoveToLocation(int row, int col){
             }
         }
     }
-
+    // Check the end is the same color or not
+    if(_board.getPiece(row, col) == nullptr)
+        return true;
+    else{
+        if(_board.getPiece(row, col)->getColor() == getColor())
+            return false;
+        else
+            return true;
+    }
     return true;
 }
 
 const char* RookPiece::toString(){
     if(getColor() == Color::Black)
-        return ("U+265D");
+        return ("\u265C");
     else
-        return ("U+2657");
+        return ("\u2656");
 }

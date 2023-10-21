@@ -168,11 +168,54 @@ void ChessBoard::createChessPiece(Color col, Type ty, int startRow, int startCol
     board[startRow][startColumn] = new_piece;
 }
 
+
+// Alan Part 2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool ChessBoard::isPieceUnderThreat(int row, int col) {
-    // dummy implementation
+    /**
+    * @brief
+    * Checks if the piece at a position is under threat.
+    * @param row
+    * Row of piece being checked.
+    * @param column
+    * Column of piece being checked.
+    * @return
+    * Returns true if a piece exists at the stated position, and an opponent
+    * piece may move to the position.
+    */
+
+    // check if there is a piece a that specific location
+    ChessPiece* CheckPiece = getPiece(row, col);
+
+    // it can't be threaten if there is no piece 
+    if (CheckPiece == nullptr) {
+        return false;
+    }
+
+    // iterate through all piece, and check if there is a piece with different color that can move to that location
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+            ChessPiece* piece = board[i][j];
+
+            //if there is no piece there, or it is same color as checkpiece, continue the loop
+            if (piece == nullptr || piece -> getColor() == CheckPiece -> getColor()){
+                continue;
+            }
+
+            // if oponent can move to checkpiece's location, checkpiece is under threaten
+            if (piece -> canMoveToLocation(row, col)){
+                return true;
+            }
+
+        }
+    }
+
+
+
+
     return false;
 }
 
+// Part 2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
     // dummy implementation
     return true;

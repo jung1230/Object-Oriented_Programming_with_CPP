@@ -172,12 +172,31 @@ void unit_isValidMove_Pawn() {
 }
 
 
+// ------------------------------ part2 ------------------------------
+void unit_isPieceUnderThreat() {
+    Student::ChessBoard board(4, 4);
+
+    // Set up the board with pieces
+    board.createChessPiece(White, Rook, 0, 0);
+    board.createChessPiece(Black, Rook, 0, 3);
+
+    // Check if the piece at (0, 0) is under threat
+    assert(board.isPieceUnderThreat(0, 0));
+    assert(board.isPieceUnderThreat(0, 3));
+
+
+}
+
+
 int main()
 {
     //unit_isValidMove_bishop_one();
     //unit_isValidMove_Rook();
     //unit_isValidMove_Pawn();
     //test_part1_4x4_1();
-    test_part1_4x4_5();
+    //test_part1_4x4_5();
+
+    unit_isPieceUnderThreat();
+
     return EXIT_SUCCESS;
 }

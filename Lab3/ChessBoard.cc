@@ -5,6 +5,7 @@
 #include "RookPiece.hh"
 #include "BishopPiece.hh"
 #include "KingPiece.hh"
+//#include <iostream>
 
 using Student::ChessBoard;
 
@@ -127,8 +128,10 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
         return true;
 
     }
-    else
+    else{
         return false;
+    }
+        
 }
 
 /**
@@ -194,7 +197,7 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
     // iterate through all piece, and check if there is a piece with different color that can move to that location
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numCols; j++) {
-            ChessPiece* piece = board[i][j];
+            ChessPiece* piece = board.at(i).at(j);
 
             //if there is no piece there, or it is same color as checkpiece, continue the loop
             if (piece == nullptr || piece -> getColor() == CheckPiece -> getColor()){
@@ -217,7 +220,27 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
 
 // Part 2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
-    // dummy implementation
+    if(!isValidMove(fromRow, fromColumn, toRow, toColumn)){
+        return false;
+    }
+        
+    // Check whether it is the right turn for the piece to move
+    if(board.at(fromRow).at(fromColumn)->getColor() != turn){
+        return false;
+    }
+    // Move the piece
+    ChessPiece *temp = board.at(fromRow).at(fromColumn);
+    board.at(fromRow).at(fromColumn) = nullptr;
+    if(board.at(toRow).at(toColumn) != nullptr){
+        delete board.at(toRow).at(toColumn);
+    }
+    board.at(toRow).at(toColumn) = temp;
+    temp->setPosition(toRow, toColumn);
+    //Change the turn
+    if(turn == Color::White)
+        turn = Color::Black;
+    else
+        turn = Color::White;
     return true;
 }
 

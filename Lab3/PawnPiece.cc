@@ -78,7 +78,7 @@ bool PawnPiece::canMoveToLocation(int row, int col)
 
 const char* PawnPiece::toString()
 {
-    if (getColor() == Color::Black)
+    if (getColor() == Color::White)
         return "\u265F";
     else
         return "\u2659";

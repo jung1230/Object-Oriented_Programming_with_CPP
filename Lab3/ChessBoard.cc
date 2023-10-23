@@ -218,6 +218,11 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
     return false;
 }
 
+// ------------------------------part 3-----------------------------
+
+//add a new func to check if the king is in check, maybe you can try to do it like "isPieceUnderThreat"
+
+
 // Part 2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn) {
     if(!isValidMove(fromRow, fromColumn, toRow, toColumn)){
@@ -236,6 +241,11 @@ bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn)
     }
     board.at(toRow).at(toColumn) = temp;
     temp->setPosition(toRow, toColumn);
+
+    // ------------------------------part 3-----------------------------
+
+    //check if the move put you king in check by using the code you just finished
+
     //Change the turn
     if(turn == Color::White)
         turn = Color::Black;

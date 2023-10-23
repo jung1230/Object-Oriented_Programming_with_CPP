@@ -3,7 +3,6 @@
 
 #include "Chess.h"
 #include "ChessPiece.hh"
-#include "KingPiece.hh"
 #include <list>
 #include <vector>
 #include <sstream>

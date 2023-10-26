@@ -83,3 +83,39 @@ const char* PawnPiece::toString()
     else
         return "\u2659";
 }
+
+/**
+ * @brief
+ * A pure virtual method to be implemented in the derived classes.
+ * Determines if movement from current position to new position is valid.
+ * This method is for king to check whether it will be captured
+ * @param toRow
+ * The row of the destination position.
+ * @param toColumn
+ * The column of the destination position.
+ * @return
+ * A boolean indicating if the king will be captured, True means it will be captured
+ */
+bool PawnPiece::undercheck(int toRow, int toColumn){
+    int move_row = toRow - getRow();
+    int move_col = toColumn - getColumn();
+    //A black piece can move in increasing row number (downwards in the figure).
+    //A white piece can move in decreasing row number (upwards in the figure).
+    if (getColor() == Color::Black){
+        // Check whether the pawn can capture the diagnal piece
+        if((move_col == 1 || move_col == -1) && (move_row == 1)){
+            return true;
+        }
+        else
+            return false;
+    }
+    else {
+        // Check whether the pawn can capture the diagnal piece
+        if((move_col == 1 || move_col == -1) && (move_row == -1)){
+            return true;
+        }
+        else
+            return false;
+    }
+    return true;
+}

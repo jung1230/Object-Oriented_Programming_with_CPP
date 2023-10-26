@@ -17,6 +17,7 @@ namespace Student
             Type getType() override;
             bool canMoveToLocation(int toRow, int toColumn) override;
             const char* toString() override;
+            bool undercheck(int toRow, int toColumn) override;
     };
 }
 

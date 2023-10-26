@@ -67,3 +67,54 @@ const char* BishopPiece::toString(){
     else
         return ("\u2657");
 }
+
+/**
+ * @brief
+ * A pure virtual method to be implemented in the derived classes.
+ * Determines if movement from current position to new position is valid.
+ * This method is for king to check whether it will be captured
+ * @param toRow
+ * The row of the destination position.
+ * @param toColumn
+ * The column of the destination position.
+ * @return
+ * A boolean indicating if the king will be captured, True means it will be captured
+ */
+bool BishopPiece::undercheck(int toRow, int toColumn){
+    int move_row = toRow - getRow();
+    int move_col = toColumn - getColumn();
+    if((move_col + move_row != 0) && (move_col - move_row != 0) && (move_row - move_col != 0)){
+        return false;        
+    } 
+
+    // Have to check whether there is piece in the moving place
+    if((move_row > 0) && (move_col > 0)){
+        for(int i = 1; i < move_row; i++){
+            if(_board.getPiece(getRow() + i, getColumn() + i) != nullptr){
+                return false;                    
+            }
+        }
+    }
+    else if((move_row > 0) && (move_col < 0)){
+        for(int i = 1; i < move_row; i++){
+            if(_board.getPiece(getRow() + i, getColumn() - i) != nullptr){
+                return false;                    
+            }
+        }
+    }
+    else if((move_row < 0) && (move_col > 0)){
+        for(int i = -1; i > move_row; i--){
+            if(_board.getPiece(getRow() + i, getColumn() - i) != nullptr){
+                return false;                    
+            }
+        }
+    }
+    else{
+        for(int i = -1; i > move_row; i--){
+            if(_board.getPiece(getRow() + i, getColumn() + i) != nullptr){
+                return false;                    
+            }
+        }
+    }
+    return true;
+}

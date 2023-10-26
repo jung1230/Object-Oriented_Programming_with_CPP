@@ -166,6 +166,9 @@ void ChessBoard::createChessPiece(Color col, Type ty, int startRow, int startCol
     else if (ty == Rook) { 
         new_piece = new RookPiece(*this, col, startRow, startColumn);
     }
+    else if (ty == King) {
+        new_piece = new KingPiece(*this, col, startRow, startColumn);
+    }
 
     // Put the new piece on the board
     board[startRow][startColumn] = new_piece;
@@ -200,10 +203,11 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
             ChessPiece* piece = board.at(i).at(j);
 
             //if there is no piece there, or it is same color as checkpiece, continue the loop
-            if (piece == nullptr || piece -> getColor() == CheckPiece -> getColor()){
+            if (piece == nullptr){
                 continue;
             }
-
+            if(piece -> getColor() == CheckPiece -> getColor())
+                continue;
             // if oponent can move to checkpiece's location, checkpiece is under threaten
             if (piece -> canMoveToLocation(row, col)){
                 return true;

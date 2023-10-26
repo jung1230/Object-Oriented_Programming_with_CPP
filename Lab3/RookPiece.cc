@@ -70,3 +70,55 @@ const char* RookPiece::toString(){
     else
         return ("\u265c");
 }
+
+/**
+ * @brief
+ * A pure virtual method to be implemented in the derived classes.
+ * Determines if movement from current position to new position is valid.
+ * This method is for king to check whether it will be captured
+ * @param toRow
+ * The row of the destination position.
+ * @param toColumn
+ * The column of the destination position.
+ * @return
+ * A boolean indicating if the king will be captured, True means it will be captured
+ */
+bool RookPiece::undercheck(int toRow, int toColumn){
+    int move_row = toRow - getRow();
+    int move_col = toColumn - getColumn();
+
+    // Rook can only move horizontally or vertically
+    if (move_row != 0 && move_col != 0) {
+        return false; // Not a valid rook move
+    }
+    // check for if there is a piece blocking the path
+    if (move_row > 0) {
+        for (int i = 1; i < move_row; i++) {
+            if (_board.getPiece(getRow() + i, getColumn()) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_row < 0) {
+        for (int i = -1; i > move_row; i--) {
+            if (_board.getPiece(getRow() + i, getColumn()) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_col > 0) {
+        for (int i = 1; i < move_col; i++) {
+            if (_board.getPiece(getRow(), getColumn() + i) != nullptr) {
+                return false; 
+            }
+        }
+    } 
+    else if (move_col < 0) {
+        for (int i = -1; i > move_col; i--) {
+            if (_board.getPiece(getRow(), getColumn() + i) != nullptr) {
+                return false; 
+            }
+        }
+    }
+    return true;
+}

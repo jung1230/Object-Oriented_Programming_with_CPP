@@ -103,6 +103,20 @@ namespace Student
      * A unicode representation of the piece.
      */
     virtual const char *toString() = 0;
+
+    /**
+     * @brief
+     * A pure virtual method to be implemented in the derived classes.
+     * Determines if movement from current position to new position is valid.
+     * This method is for king to check whether it will be captured
+     * @param toRow
+     * The row of the destination position.
+     * @param toColumn
+     * The column of the destination position.
+     * @return
+     * A boolean indicating if the king will be captured, True means it will be captured
+     */
+    virtual bool undercheck(int toRow, int toColumn) = 0;
   };
 }
 

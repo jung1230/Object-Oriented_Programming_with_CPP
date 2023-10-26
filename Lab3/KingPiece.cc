@@ -18,20 +18,40 @@ bool KingPiece::canMoveToLocation(int row, int col){
 
     // king can only move around him
     if (move_row > 1 || move_row < -1 || move_col > 1 || move_col < -1) {
-        return false; // Not a valid rook move
+        return false;
     }
  
-    // if target is not null or it is not an opponent, return false
+    // if target is not null and it is not an opponent or it is a king, return false
     ChessPiece* target = _board.getPiece(row, col);
-    if ((target == nullptr || target -> getColor() != getColor()) == 0)
-        return false;
-    
+    if(target != nullptr){
+        if((target->getColor() == getColor()) || (target->getType() == getType()))
+            return false;
+    }
     // Check if the move puts itself in check by creating a copy of the board to simulate it
-    ChessBoard temp = _board; 
+    /*ChessBoard temp = _board; 
     temp.movePiece(getRow(), getColumn(), row, col);
     // if king is moving to place that will make him under threat, return false
     if (temp.isPieceUnderThreat(row, col)) {
         return false;  
+    }*/
+    int numrow = _board.getNumRows();
+    int numcol = _board.getNumCols();
+    for (int i = 0; i < numrow; i++) {
+        for (int j = 0; j < numcol; j++) {
+            ChessPiece* piece = _board.getPiece(i, j);
+            //if there is no piece there, or it is same color as checkpiece, continue the loop
+            if (piece == nullptr){
+                continue;
+            }
+            if(piece -> getColor() == getColor())
+                continue;
+            if(piece -> getType() == getType())
+                continue;
+            // if oponent can move to checkpiece's location, checkpiece is under threaten
+            if (piece -> undercheck(row, col)){
+                return false;
+            }
+        }
     }
 
     return true;
@@ -39,7 +59,24 @@ bool KingPiece::canMoveToLocation(int row, int col){
 
 const char* KingPiece::toString(){
     if(getColor() == Color::Black)
-        return ("\u2656");
+        return ("\u265A");
     else
-        return ("\u265c");
+        return ("\u2654");
+}
+
+/**
+ * @brief
+ * A pure virtual method to be implemented in the derived classes.
+ * Determines if movement from current position to new position is valid.
+ * This method is for king to check whether it will be captured
+ * @param toRow
+ * The row of the destination position.
+ * @param toColumn
+ * The column of the destination position.
+ * @return
+ * A boolean indicating if the king will be captured, True means it will be captured
+ */
+// dummy operation of undercheck method in KingPiece
+bool KingPiece::undercheck(int toRow, int toColumn){
+    return false;
 }

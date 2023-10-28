@@ -265,6 +265,86 @@ void unit_isPieceUnderThreat() {
 
 }
 
+// ------------------------------ part3 ------------------------------
+void test_part3_4x4_1(){
+    Student::ChessBoard sBoard(4, 4);
+    sBoard.createChessPiece(White, Rook, 3, 2);
+    sBoard.createChessPiece(Black, Bishop, 1, 3);
+    sBoard.createChessPiece(Black, Rook, 1, 1);
+    sBoard.createChessPiece(White, Rook, 2, 3);
+    sBoard.createChessPiece(Black, King, 0, 0);
+    sBoard.createChessPiece(White, King, 3, 0);
+    std::ostringstream temp = sBoard.displayBoard();
+    std::cout << temp.str();
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << sBoard.movePiece(3,2,3,1) << std::endl; // White
+    std::cout << sBoard.movePiece(1,1,1,2) << std::endl; // Black
+    std::cout << sBoard.movePiece(2,3,2,1) << std::endl; // White
+    std::cout <<sBoard.movePiece(1,2,0,2) << std::endl; // Black
+    std::cout << sBoard.movePiece(0,0,2,3) << std::endl;
+
+    temp = sBoard.displayBoard();
+    std::cout << temp.str();
+    std::cout << std::endl;
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    sBoard.movePiece(2,1,0,1);
+    sBoard.movePiece(1,3,2,2);
+    sBoard.movePiece(3,1,3,0);
+    sBoard.movePiece(2,2,3,1);
+    sBoard.movePiece(0,2,1,0);
+
+    temp = sBoard.displayBoard();
+    std::cout << temp.str();
+    std::cout << std::endl;
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    sBoard.movePiece(3,0,3,1);
+    sBoard.movePiece(0,2,2,2);
+    sBoard.movePiece(3,1,3,0);
+    sBoard.movePiece(2,2,1,2);
+    sBoard.movePiece(1,1,2,3);
+
+    temp = sBoard.displayBoard();
+    std::cout << temp.str();
+    std::cout << std::endl;
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    sBoard.movePiece(3,0,0,0);
+
+    temp = sBoard.displayBoard();
+    std::cout << temp.str();
+    std::cout << std::endl;
+}
+
 
 int main()
 {

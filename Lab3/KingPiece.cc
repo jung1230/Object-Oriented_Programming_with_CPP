@@ -24,7 +24,7 @@ bool KingPiece::canMoveToLocation(int row, int col){
     // if target is not null and it is not an opponent or it is a king, return false
     ChessPiece* target = _board.getPiece(row, col);
     if(target != nullptr){
-        if((target->getColor() == getColor()) || (target->getType() == getType()))
+        if((target->getColor() == getColor()))
             return false;
     }
     // Check if the move puts itself in check by creating a copy of the board to simulate it
@@ -36,6 +36,9 @@ bool KingPiece::canMoveToLocation(int row, int col){
     }*/
     int numrow = _board.getNumRows();
     int numcol = _board.getNumCols();
+    //ChessPiece *temp = _board.getPiece(row,col);
+    
+
     for (int i = 0; i < numrow; i++) {
         for (int j = 0; j < numcol; j++) {
             if((i == row)&&(j==col)){
@@ -48,12 +51,12 @@ bool KingPiece::canMoveToLocation(int row, int col){
             }
             if(piece -> getColor() == getColor())
                 continue;
-            if(piece -> getType() == getType())
-                continue;
+            /*if(piece -> getType() == getType())
+                continue;*/
             // if oponent can move to checkpiece's location, checkpiece is under threaten
-            if (piece -> undercheck(row, col)){
-                return false;
-            }
+            // if (piece -> undercheck(row, col)){
+            //     return false;
+            // }
         }
     }
 

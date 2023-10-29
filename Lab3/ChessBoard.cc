@@ -245,10 +245,10 @@ bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn)
 
 
     // ------------------------------part 3-----------------------------
-    for(int i = 0; i < board.getRow(); i++){
-        for(int j = 0; j < board.getCol(); j++){
-            if(board.at(i).at(j).getType == Type::King && board.at(i).at(j).getColor() == getColor()){
-                if(board.isPieceUnderThreat(i,j)){
+    for(int i = 0; i < getNumRows(); i++){
+        for(int j = 0; j < getNumCols(); j++){
+            if((board.at(i).at(j)->getType() == Type::King) && (board.at(i).at(j)->getColor() == board.at(toRow).at(toColumn)->getColor())){
+                if(isPieceUnderThreat(i,j)){
                     board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
                     board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
                     board.at(toRow).at(toColumn) = temp;  

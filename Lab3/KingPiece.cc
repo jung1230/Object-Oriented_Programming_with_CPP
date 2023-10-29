@@ -38,6 +38,9 @@ bool KingPiece::canMoveToLocation(int row, int col){
     int numcol = _board.getNumCols();
     for (int i = 0; i < numrow; i++) {
         for (int j = 0; j < numcol; j++) {
+            if((i == row)&&(j==col)){
+                continue;
+            }
             ChessPiece* piece = _board.getPiece(i, j);
             //if there is no piece there, or it is same color as checkpiece, continue the loop
             if (piece == nullptr){

@@ -45,6 +45,8 @@ bool PawnPiece::canMoveToLocation(int row, int col)
                 return false; 
             }
         }
+
+
     }
     else {
         // Check whether the pawn can capture the diagnal piece

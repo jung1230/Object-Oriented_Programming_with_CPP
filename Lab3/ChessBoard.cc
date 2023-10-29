@@ -222,9 +222,7 @@ bool ChessBoard::isPieceUnderThreat(int row, int col) {
     return false;
 }
 
-// ------------------------------part 3-----------------------------
 
-//add a new func to check if the king is in check, maybe you can try to do it like "isPieceUnderThreat"
 
 
 // Part 2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -237,18 +235,32 @@ bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn)
     if(board.at(fromRow).at(fromColumn)->getColor() != turn){
         return false;
     }
-    // Move the piece
-    ChessPiece *temp = board.at(fromRow).at(fromColumn);
+
+    // Move the piece, temp maybe captured
+    ChessPiece *temp = board.at(toRow).at(toColumn);
+    board.at(toRow).at(toColumn) = board.at(fromRow).at(fromColumn);
     board.at(fromRow).at(fromColumn) = nullptr;
-    if(board.at(toRow).at(toColumn) != nullptr){
-        delete board.at(toRow).at(toColumn);
-    }
-    board.at(toRow).at(toColumn) = temp;
-    temp->setPosition(toRow, toColumn);
+    board.at(toRow).at(toColumn)->setPosition(toRow, toColumn);
+
+
 
     // ------------------------------part 3-----------------------------
-
-    //check if the move put you king in check by using the code you just finished
+    for(int i = 0; i < board.getRow(); i++){
+        for(int j = 0; j < board.getCol(); j++){
+            if(board.at(i).at(j).getType == Type::King && board.at(i).at(j).getColor() == getColor()){
+                if(board.isPieceUnderThreat(i,j)){
+                    board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
+                    board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
+                    board.at(toRow).at(toColumn) = temp;  
+                    return false;       
+                }
+            }
+        }
+    }
+    // capture the chesspiece if it is not a nullptr 
+    if(temp != nullptr){
+        delete temp;
+    }
 
     //Change the turn
     if(turn == Color::White)

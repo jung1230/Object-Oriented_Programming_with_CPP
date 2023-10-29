@@ -277,72 +277,128 @@ void test_part3_4x4_1(){
     std::ostringstream temp = sBoard.displayBoard();
     std::cout << temp.str();
 
+    // std::cout << std::endl;
+    std::cout << "movePiece(3,0,2,0)" << std::endl;
+    sBoard.movePiece(3,0,2,0);
+
+    std::cout << "valid move\nwhite king" << std::endl; // white king move up
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+            std::cout << sBoard.isValidMove(2,0,i,j) << " ";
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
-    std::cout << sBoard.movePiece(3,2,3,1) << std::endl; // White
-    std::cout << sBoard.movePiece(1,1,1,2) << std::endl; // Black
-    std::cout << sBoard.movePiece(2,3,2,1) << std::endl; // White
-    std::cout <<sBoard.movePiece(1,2,0,2) << std::endl; // Black
-    std::cout << sBoard.movePiece(0,0,2,3) << std::endl;
-
-    temp = sBoard.displayBoard();
-    std::cout << temp.str();
-    std::cout << std::endl;
+    std::cout << "black king" << std::endl; // white king move up
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isValidMove(0,0,i,j) << " ";
+        }
+        std::cout << std::endl;
+    }    
+    std::cout << "white rook" << std::endl; // white king move up
 
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+            std::cout << sBoard.isValidMove(3,2,i,j) << " ";
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
-
-    sBoard.movePiece(2,1,0,1);
-    sBoard.movePiece(1,3,2,2);
-    sBoard.movePiece(3,1,3,0);
-    sBoard.movePiece(2,2,3,1);
-    sBoard.movePiece(0,2,1,0);
-
-    temp = sBoard.displayBoard();
-    std::cout << temp.str();
-    std::cout << std::endl;
-
+    std::cout << "white rook" << std::endl; // white king move up
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+            std::cout << sBoard.isValidMove(2,3,i,j) << " ";
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
-
-    sBoard.movePiece(3,0,3,1);
-    sBoard.movePiece(0,2,2,2);
-    sBoard.movePiece(3,1,3,0);
-    sBoard.movePiece(2,2,1,2);
-    sBoard.movePiece(1,1,2,3);
-
-    temp = sBoard.displayBoard();
-    std::cout << temp.str();
-    std::cout << std::endl;
-
+    std::cout << "black rook" << std::endl; // white king move up
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+            std::cout << sBoard.isValidMove(1,1,i,j) << " ";
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
+        std::cout << "black bishop" << std::endl; // white king move up
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            std::cout << sBoard.isValidMove(1,3,i,j) << " ";
+        }
+        std::cout << std::endl;
+    }    
+    // std::cout << sBoard.movePiece(1,3,0,2) << std::endl; // 
+    // std::cout << sBoard.movePiece(2,3,1,3) << std::endl; // 
+    // std::cout << sBoard.movePiece(1,1,0,1) << std::endl; // make white king in threat
+    // std::cout << sBoard.movePiece(1,2,0,3) << std::endl; // invalid move, there is no piece
+    // std::cout << sBoard.movePiece(2,0,3,0) << std::endl; // make white king out of threat
+    // std::cout << sBoard.movePiece(0,1,2,1) << std::endl; // 
+    // std::cout << sBoard.movePiece(3,2,0,2) << std::endl; // rook eat bishop, and make balck king in threat
+    // for(int i = 0; i < 4; i++){
+    //     for(int j = 0; j < 4; j++){
+    //         std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    
+    // std::ostringstream temp1 = sBoard.displayBoard();
+    // std::cout << temp1.str();
 
-    sBoard.movePiece(3,0,0,0);
 
-    temp = sBoard.displayBoard();
-    std::cout << temp.str();
-    std::cout << std::endl;
+    // std::cout << sBoard.movePiece(2,3,2,1) << std::endl; // White
+    // std::cout <<sBoard.movePiece(1,2,0,2) << std::endl; // Black
+    // std::cout << sBoard.movePiece(0,0,2,3) << std::endl;
+
+    // temp = sBoard.displayBoard();
+    // std::cout << temp.str();
+    // std::cout << std::endl;
+
+    // for(int i = 0; i < 4; i++){
+    //     for(int j = 0; j < 4; j++){
+    //         std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
+
+    // sBoard.movePiece(2,1,0,1);
+    // sBoard.movePiece(1,3,2,2);
+    // sBoard.movePiece(3,1,3,0);
+    // sBoard.movePiece(2,2,3,1);
+    // sBoard.movePiece(0,2,1,0);
+
+    // temp = sBoard.displayBoard();
+    // std::cout << temp.str();
+    // std::cout << std::endl;
+
+    // for(int i = 0; i < 4; i++){
+    //     for(int j = 0; j < 4; j++){
+    //         std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
+
+    // sBoard.movePiece(3,0,3,1);
+    // sBoard.movePiece(0,2,2,2);
+    // sBoard.movePiece(3,1,3,0);
+    // sBoard.movePiece(2,2,1,2);
+    // sBoard.movePiece(1,1,2,3);
+
+    // temp = sBoard.displayBoard();
+    // std::cout << temp.str();
+    // std::cout << std::endl;
+
+    // for(int i = 0; i < 4; i++){
+    //     for(int j = 0; j < 4; j++){
+    //         std::cout << sBoard.isPieceUnderThreat(i, j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
+
+    // sBoard.movePiece(3,0,0,0);
+
+    // temp = sBoard.displayBoard();
+    // std::cout << temp.str();
+    // std::cout << std::endl;
 }
 
 
@@ -352,7 +408,7 @@ int main()
     //unit_isValidMove_Rook();
     //unit_isValidMove_Pawn();
     //test_part1_4x4_1();
-    test_part2_4x4_1();
+    test_part3_4x4_1();
 
     unit_isPieceUnderThreat();
 

@@ -124,14 +124,38 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
         }
     }*/
     // Then use piece's canMoveToLocation to check
-    if(board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn)){
-        return true;
-
-    }
-    else{
+    if(!board.at(fromRow).at(fromColumn)->canMoveToLocation(toRow, toColumn)){
         return false;
     }
         
+    // Move the piece, temp may be captured
+    ChessPiece *temp = board.at(toRow).at(toColumn);
+    board.at(toRow).at(toColumn) = board.at(fromRow).at(fromColumn);
+    board.at(fromRow).at(fromColumn) = nullptr;
+    board.at(toRow).at(toColumn)->setPosition(toRow, toColumn);
+
+
+
+    // ------------------------------part 3-----------------------------
+    for(int i = 0; i < getNumRows(); i++){
+        for(int j = 0; j < getNumCols(); j++){
+            if(board.at(i).at(j) != nullptr){
+                if((board.at(i).at(j)->getType() == Type::King) && (board.at(i).at(j)->getColor() == board.at(toRow).at(toColumn)->getColor())){
+                    if(isPieceUnderThreat(i,j)){
+                        board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
+                        board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
+                        board.at(toRow).at(toColumn) = temp;  
+                        return false;       
+                    }
+                }
+            }
+        }
+    }
+    
+    board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
+    board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
+    board.at(toRow).at(toColumn) = temp;  
+    return true;
 }
 
 /**
@@ -241,28 +265,29 @@ bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn)
     board.at(toRow).at(toColumn) = board.at(fromRow).at(fromColumn);
     board.at(fromRow).at(fromColumn) = nullptr;
     board.at(toRow).at(toColumn)->setPosition(toRow, toColumn);
-
+    if(temp != nullptr)
+        delete temp;
 
 
     // ------------------------------part 3-----------------------------
-    for(int i = 0; i < getNumRows(); i++){
-        for(int j = 0; j < getNumCols(); j++){
-            if(board.at(i).at(j) != nullptr){
-                if((board.at(i).at(j)->getType() == Type::King) && (board.at(i).at(j)->getColor() == board.at(toRow).at(toColumn)->getColor())){
-                    if(isPieceUnderThreat(i,j)){
-                        board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
-                        board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
-                        board.at(toRow).at(toColumn) = temp;  
-                        return false;       
-                    }
-                }
-            }
-        }
-    }
-    // capture the chesspiece if it is not a nullptr 
-    if(temp != nullptr){
-        delete temp;
-    }
+    // for(int i = 0; i < getNumRows(); i++){
+    //     for(int j = 0; j < getNumCols(); j++){
+    //         if(board.at(i).at(j) != nullptr){
+    //             if((board.at(i).at(j)->getType() == Type::King) && (board.at(i).at(j)->getColor() == board.at(toRow).at(toColumn)->getColor())){
+    //                 if(isPieceUnderThreat(i,j)){
+    //                     board.at(fromRow).at(fromColumn) = board.at(toRow).at(toColumn);
+    //                     board.at(fromRow).at(fromColumn)->setPosition(fromRow, fromColumn);  
+    //                     board.at(toRow).at(toColumn) = temp;  
+    //                     return false;       
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // // capture the chesspiece if it is not a nullptr 
+    // if(temp != nullptr){
+    //     delete temp;
+    // }
 
     //Change the turn
     if(turn == Color::White)

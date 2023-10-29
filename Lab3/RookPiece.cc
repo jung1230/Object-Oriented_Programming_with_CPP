@@ -65,7 +65,7 @@ bool RookPiece::canMoveToLocation(int row, int col){
 }
 
 const char* RookPiece::toString(){
-    if(getColor() == Color::Black)
+    if(getColor() == Color::White)
         return ("\u2656");
     else
         return ("\u265c");

@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "optional": "cpp",
+        "*.tcc": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "memory_resource": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp"
+    }
+}

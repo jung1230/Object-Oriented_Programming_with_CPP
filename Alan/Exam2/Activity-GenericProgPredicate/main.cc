@@ -21,7 +21,7 @@ bool IsLongerThanFive(const std::string& str) {
 
 
 template<typename Predicate>
-void MatchCond(Predicate pred) {
+void MatchCond(Predicate pred) { //Predicate = bool (*pred)(int)
     for (int i = 1; i < 11; i++) {
         if (pred(i)) {
             std::cout << i << " ";

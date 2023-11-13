@@ -5,7 +5,7 @@
 
 
 // pass list by const reference and use a const iterator to print
-void ConstIterator(const std::list<int>& l) {
+void ConstIterator(const std::list<int> l) {
     std::list<int>::const_iterator pl = l.begin();
     while ( pl != l.end() ) {
         std::cout << *pl << " ";

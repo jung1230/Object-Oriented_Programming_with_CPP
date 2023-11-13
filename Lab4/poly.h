@@ -107,6 +107,21 @@ public:
      *  A vector of pairs representing the canonical form of the polynomial
      */
     std::vector<std::pair<power, coeff>> canonical_form() const;
+
+// ----------------------------------------  Alan :: part 1  ------------------------------------------------------
+    // + operator overload
+    polynomial operator+(const polynomial& other) const;
+    polynomial operator+(int constant) const;
+    friend polynomial operator+(int constant, const polynomial& poly);
+
+    // * operator overload
+    polynomial operator*(const polynomial& other) const;
+    polynomial operator*(int constant) const;
+    friend polynomial operator*(int constant, const polynomial& poly);
+
+    // % operator overload
+    polynomial operator%(const polynomial& other) const;
+
 };
 
 #endif

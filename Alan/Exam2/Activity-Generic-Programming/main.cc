@@ -32,9 +32,8 @@ int commonfunc(T start, T end){
 } 
 
 // Step 4
-template<typename T>
-auto finalfunc(T start, T end){
-    auto sum = 0.0;
+template<typename T, typename K>
+K finalfunc(T start, T end, K sum){
     for (T iter = start; iter != end; iter++) {
         sum += *iter;
     }
@@ -65,8 +64,17 @@ int main() {
     // Step 4
     // maybe the sum is not a int
     std::list<double> lid = {16.5, 23.5, 11.5, 14.5, 19.5};
-    double final_li = finalfunc(lid.begin(), lid.end());
+    double final_li = 0.0;
+    final_li = finalfunc(lid.begin(), lid.end(), final_li);
     std::cout << "Sum of li: " << final_li << std::endl;
-    int final_vec = finalfunc(vec.begin(), vec.end());
+    int final_vec = 0;
+    final_vec = finalfunc(vec.begin(), vec.end(), final_vec);
     std::cout << "Sum of vec: " << final_vec << std::endl;
+
+    std::vector<std::string> stri = {"Ver","Ham","Rus"};
+    std::string final_stri = "";
+    final_stri = finalfunc(stri.begin(), stri.end(), final_stri);
+    std::cout << "Sum of string: " << final_stri << std::endl;
+
+
 }

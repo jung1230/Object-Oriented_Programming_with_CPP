@@ -15,10 +15,18 @@ void Increment(int& num) {
 }
 
 
-// Task 4: Write a functor IncrementK
-void IncrementByK(int& num, int k) {
-    num += k;
-}
+// Task 4: Write a function object IncrementK
+class IncrementK {
+private:
+    int k;
+
+public:
+    IncrementK(int _k) : k(_k) {}
+
+    void operator()(int& num) const {
+        num += k;
+    }
+};
 
 int main() {
     // Task 2
@@ -55,8 +63,7 @@ int main() {
         std::cout << num << " " << std::endl;;
     }
     int k = 10;
-    my_foreach(vec3.begin(), vec3.end(), [&k](int& num) { IncrementByK(num, k); });
-
+    my_foreach(vec3.begin(), vec3.end(), IncrementK(k));
 
     std::cout << "After" << std::endl;
     for (const auto& num : vec3) {

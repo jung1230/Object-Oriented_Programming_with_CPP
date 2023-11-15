@@ -135,6 +135,11 @@ public:
     polynomial operator-(int constant) const;
     friend polynomial operator-(int constant, const polynomial& poly);
 
+    // / operator overload
+    polynomial operator/(const polynomial& other) const;
+    polynomial operator/(int constant) const;
+    friend polynomial operator/(int constant, const polynomial& poly);
+
 private:
     // Alan: This might not be the best solution
     std::vector<std::pair<power, coeff>> terms;

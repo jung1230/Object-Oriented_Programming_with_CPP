@@ -64,7 +64,7 @@ public:
      * @return
      * A reference to the copied polynomial
      */
-    // polynomial &operator=(const polynomial &other);
+    polynomial &operator=(const polynomial &other);
 
     
 
@@ -74,7 +74,7 @@ public:
      * @return size_t
      *  The degree of the polynomial
      */
-    size_t find_degree_of();
+    size_t find_degree_of() const;
 
     /**
      * @brief Returns a vector that contains the polynomial is canonical form. This
@@ -122,13 +122,18 @@ public:
     polynomial operator+(int constant) const;
     friend polynomial operator+(int constant, const polynomial& poly);
 
-    // // * operator overload
-    // polynomial operator*(const polynomial& other) const;
-    // polynomial operator*(int constant) const;
-    // friend polynomial operator*(int constant, const polynomial& poly);
+    // * operator overload
+    polynomial operator*(const polynomial& other) const;
+    polynomial operator*(int constant) const;
+    friend polynomial operator*(int constant, const polynomial& poly);
 
-    // // % operator overload
-    // polynomial operator%(const polynomial& other) const;
+    // % operator overload
+    polynomial operator%(const polynomial& other) const;
+
+    // - operator overload
+    polynomial operator-(const polynomial& other) const;
+    polynomial operator-(int constant) const;
+    friend polynomial operator-(int constant, const polynomial& poly);
 
 private:
     // Alan: This might not be the best solution

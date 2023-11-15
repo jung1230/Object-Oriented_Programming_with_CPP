@@ -57,7 +57,7 @@ void polynomial::print() const{
     // Alan
     std::vector<std::pair<power, coeff>> sorted_terms = canonical_form();
     if (sorted_terms.empty()) {
-        std::cout << "0";
+        std::cout << "empty";
     } 
     else {
         auto iter = sorted_terms.begin();  
@@ -172,6 +172,12 @@ std::vector<std::pair<power, coeff>> polynomial::canonical_form() const{
         }
     }
     
+    if(combined_terms.empty()){
+        std::vector<std::pair<power, coeff>> zero;
+        zero = {{0,0}};
+        return zero;
+    }
+         
     return combined_terms;
 }
 
@@ -295,32 +301,24 @@ polynomial operator*(int constant, const polynomial& poly){
     return result;
 }
 
+
 // % operator overload
 polynomial polynomial::operator%(const polynomial& other) const{
-    polynomial dividend(*this);
-    polynomial divisor(other);
 
-
-    // Perform polynomial long division
-    while (dividend.find_degree_of() >= divisor.find_degree_of()) {
-        // Find the ratio of the highest terms
-        size_t highest_degree_diff = dividend.find_degree_of() - divisor.find_degree_of();
-        int ratio_coeff = dividend.terms[0].second / divisor.terms[0].second;
-
-        // Create a temporary polynomial representing the term to subtract
-        polynomial term_to_subtract;
-        term_to_subtract.terms.push_back({highest_degree_diff, ratio_coeff});
-
-        // Subtract the term from the dividend
-        dividend = dividend - (divisor * term_to_subtract);
-
-        // Remove any terms with zero coefficients from the updated dividend
-        dividend.terms.erase(std::remove_if(dividend.terms.begin(), dividend.terms.end(), [](const auto &term) {return term.second == 0;}), dividend.terms.end());
+    if (other.terms.size() == 1 && other.terms[0].second == 0) {
+        return *this;  
     }
 
-    dividend.canonical_form();
-    return dividend;
+    // get remainder by using geting quotient
+    polynomial quotient = *this / other;  
+    polynomial product = other * quotient; 
+    polynomial remainder = *this - product; 
+    remainder.canonical_form();  
+    return remainder;
+
 }
+
+
 
 
 polynomial polynomial::operator-(const polynomial& other) const{
@@ -399,6 +397,101 @@ polynomial operator-(int constant, const polynomial& poly){
         result.terms.push_back({0, constant});
     }
     result.canonical_form();
+
+    return result;
+}
+
+
+// / operator overload
+polynomial polynomial::operator/(const polynomial& other) const {
+    polynomial quotient;
+    polynomial dividend(*this);
+    polynomial divisor(other);
+
+    // Canonicalize the polynomials
+    dividend.canonical_form();
+    divisor.canonical_form();
+
+    // Check if the divisor is zero
+    if (divisor.terms.size() == 1 && divisor.terms[0].second == 0) {
+        return quotient;  
+    }
+
+// Counter for consecutive same degrees, this is use for avoiding infinite while loop
+    size_t consecutive_same_degree_count = 0;  
+    const size_t max_consecutive_same_degree = 3;
+
+    // Perform polynomial long division
+    while (dividend.find_degree_of() >= divisor.find_degree_of()) {
+        // Get the leading terms of the dividend and divisor
+        auto leading_term_dividend = dividend.canonical_form().front();
+        auto leading_term_divisor = divisor.canonical_form().front();
+
+        // get the quotient term
+        power quotient_power = leading_term_dividend.first - leading_term_divisor.first;
+        coeff quotient_coeff = leading_term_dividend.second / leading_term_divisor.second;
+
+        // Add the quotient term to the result
+        std::vector<std::pair<power, coeff>> quotient_vector = {{quotient_power, quotient_coeff}};
+        quotient = quotient + polynomial(quotient_vector.begin(), quotient_vector.end());
+
+        // dividend - (divisor * quotient term)
+        std::vector<std::pair<power, coeff>> term_to_subtract_vector = {{quotient_power, quotient_coeff}};
+        polynomial term_to_subtract = divisor * polynomial(term_to_subtract_vector.begin(), term_to_subtract_vector.end());
+
+        dividend = dividend - term_to_subtract;
+        
+
+        // Check if the degree of remaining terms in the dividend is not decreasing
+        if (dividend.find_degree_of() >= leading_term_dividend.first) {
+            consecutive_same_degree_count++;
+        } else {
+            consecutive_same_degree_count = 0; 
+        }
+        // Check if the consecutive same degree count exceeds the threshold , avoid infinite loop
+        if (consecutive_same_degree_count >= max_consecutive_same_degree) {
+            break;  
+        }
+    }
+
+    quotient.canonical_form();
+    return quotient;
+}
+
+
+polynomial polynomial::operator/(int constant) const {
+    // Check if the constant is zero
+    if (constant == 0) {
+        return polynomial();  
+    }
+
+    // Copy the caller
+    polynomial result(*this);
+
+    // Divide each term's coefficient by the constant
+    for (auto& term : result.terms) {
+        term.second /= constant;
+    }
+
+    result.canonical_form();
+    return result;
+}
+
+// Friend function for int / polynomial
+polynomial operator/(int constant, const polynomial& poly) {
+    // Check if the polynomial is zero
+    if (poly.terms.size() == 1 && poly.terms[0].second == 0) {
+        return polynomial();  
+    }
+
+    polynomial result;
+
+    if (poly.terms.size() == 1 && poly.terms[0].first == 0) {
+        result.terms.push_back({0, constant / poly.terms[0].second});
+    }
+    else{
+        result.terms.push_back({0,0});
+    }    
 
     return result;
 }

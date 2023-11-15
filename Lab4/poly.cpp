@@ -41,7 +41,7 @@ polynomial::polynomial() : terms({{0,0}}){
  */
 polynomial::polynomial(const polynomial &other){
     // Alan
-    // iterate through each terms and copy it. If i do not add const at the begining, error will occur
+    // go through each terms and copy it. If i do not add const at the begining, error will occur
     for (const std::pair<power, coeff> &term : other.terms) {
         this -> terms.push_back(term);
     }
@@ -80,10 +80,22 @@ void polynomial::print() const{
  * @return
  * A reference to the copied polynomial
  */
-// polynomial &polynomial::operator=(const polynomial &other){
-//     // Peter
+polynomial &polynomial::operator=(const polynomial &other){
+    // self assignment
+    if (this == &other) {
+        return *this;
+    }
 
-// }
+    // clear terms of this
+    this->terms.clear();
+
+    // go through each term and copy it
+    for (const std::pair<power, coeff> &term : other.terms) {
+        this->terms.push_back(term);
+    }
+
+    return *this;
+}
 
 
 
@@ -93,15 +105,15 @@ void polynomial::print() const{
  * @return size_t
  *  The degree of the polynomial
  */
-size_t polynomial::find_degree_of(){
+size_t polynomial::find_degree_of() const{
     // Alan
-    std::vector<std::pair<power, coeff>> sorted_terms = canonical_form();
+    std::vector<std::pair<power, coeff>> termss = canonical_form();
 
-    if (sorted_terms.empty()) {
+    if (termss.empty()) {
         return 0;
     } 
     else {
-        return sorted_terms.begin()->first;
+        return termss.begin()->first;
     }
 
 }
@@ -128,15 +140,39 @@ size_t polynomial::find_degree_of(){
  */
 std::vector<std::pair<power, coeff>> polynomial::canonical_form() const{
     // Alan    
+
     // copy all the terms
     std::vector<std::pair<power, coeff>> sorted_terms = terms;
     // sort it by using sort in algrithm
     std::sort(sorted_terms.begin(), sorted_terms.end(), std::greater<>());
 
-    // Remove terms with coefficient 0
-    sorted_terms.erase(std::remove_if(sorted_terms.begin(), sorted_terms.end(),[](const auto &term) { return term.second == 0; }),sorted_terms.end());
+    
+    // Remove terms with coefficient 0. remove_if is used to move elements with a coefficient of 0 to the end of the vector, and erase is used to remove elements from the iterator returned by std::remove_if to the end of the vector.
+    //sorted_terms.erase(std::remove_if(sorted_terms.begin(), sorted_terms.end(),[](const auto &term) { return term.second == 0; }),sorted_terms.end());
 
-    return sorted_terms;
+
+    std::vector<std::pair<power, coeff>> combined_terms;
+
+    for (const auto &term : sorted_terms) {
+        // If the term's power does not match the last term's power,  or the combined_terms vector is empty, add the term
+        if (term.second == 0){
+            continue;
+        }
+        else if (combined_terms.empty() || term.first != combined_terms.back().first) {
+            combined_terms.push_back(term);
+        } 
+        // If the powers are same, sum coefficients
+        else {  
+            if (combined_terms.back().second + term.second != 0){
+                combined_terms.back().second += term.second;
+            }
+            else
+                combined_terms.pop_back();
+            
+        }
+    }
+    
+    return combined_terms;
 }
 
 
@@ -180,6 +216,7 @@ polynomial polynomial::operator+(const polynomial& other) const{
         result.terms.push_back(*iter2);
         iter2++;
     }
+    result.canonical_form();
 
     return result;
 }
@@ -198,6 +235,7 @@ polynomial polynomial::operator+(int constant) const{
     else{
         result.terms.push_back({0, constant});
     }
+    result.canonical_form();
 
     return result;
 }
@@ -217,24 +255,150 @@ polynomial operator+(int constant, const polynomial& poly){
     else{
         result.terms.push_back({0, constant});
     }
+    result.canonical_form();
 
     return result;
 }
 
-// // * operator overload
-// // Peter
-// polynomial polynomial::operator*(const polynomial& other) const{
+// * operator overload
+polynomial polynomial::operator*(const polynomial& other) const{
+    polynomial result;
 
-// }
-// polynomial polynomial::operator*(int constant) const{
+    for (const std::pair<power, coeff>& term1 : this->terms) {
+        for (const std::pair<power, coeff>& term2 : other.terms) {
+            // Multiply the coefficients and add the powers
+            result.terms.push_back({term1.first + term2.first, term1.second * term2.second});
+        }
+    }
 
-// }
-// polynomial operator*(int constant, const polynomial& poly){
+    result.canonical_form();
+    return result;
+}
+polynomial polynomial::operator*(int constant) const{
+    polynomial result;
 
-// }
+    for (const std::pair<power, coeff>& term : this->terms) {
+        // Multiply the coefficient by the constant
+        result.terms.push_back({term.first, term.second * constant});
+    }
+    result.canonical_form();
+    return result;
+}
+polynomial operator*(int constant, const polynomial& poly){
+    polynomial result;
 
-// // % operator overload
-// // Peter
-// polynomial polynomial::operator%(const polynomial& other) const{
+    for (const std::pair<power, coeff>& term : poly.terms) {
+        // Multiply the coefficient by the constant
+        result.terms.push_back({term.first, term.second * constant});
+    }
+    result.canonical_form();
+    return result;
+}
 
-// }
+// % operator overload
+polynomial polynomial::operator%(const polynomial& other) const{
+    polynomial dividend(*this);
+    polynomial divisor(other);
+
+
+    // Perform polynomial long division
+    while (dividend.find_degree_of() >= divisor.find_degree_of()) {
+        // Find the ratio of the highest terms
+        size_t highest_degree_diff = dividend.find_degree_of() - divisor.find_degree_of();
+        int ratio_coeff = dividend.terms[0].second / divisor.terms[0].second;
+
+        // Create a temporary polynomial representing the term to subtract
+        polynomial term_to_subtract;
+        term_to_subtract.terms.push_back({highest_degree_diff, ratio_coeff});
+
+        // Subtract the term from the dividend
+        dividend = dividend - (divisor * term_to_subtract);
+
+        // Remove any terms with zero coefficients from the updated dividend
+        dividend.terms.erase(std::remove_if(dividend.terms.begin(), dividend.terms.end(), [](const auto &term) {return term.second == 0;}), dividend.terms.end());
+    }
+
+    dividend.canonical_form();
+    return dividend;
+}
+
+
+polynomial polynomial::operator-(const polynomial& other) const{
+    
+    polynomial result;
+    std::vector<std::pair<power, coeff>> sorted_terms1 = canonical_form();
+    std::vector<std::pair<power, coeff>> sorted_terms2 = other.canonical_form();
+
+    auto iter1 = sorted_terms1.begin();
+    auto iter2 = sorted_terms2.begin();
+
+    // Loop through both polynomials
+    while (iter1 != sorted_terms1.end() && iter2 != sorted_terms2.end()) {
+        // If both terms have the same power
+        if (iter1->first == iter2->first) {
+            result.terms.push_back({iter1->first, iter1->second - iter2->second});
+            iter1++;
+            iter2++;
+        }
+        // if first term is bigger than second, move the first one into result directly
+        else if (iter1->first > iter2->first) {
+            result.terms.push_back(*iter1);
+            iter1++;
+        } else {
+            // Subtract the second term
+            result.terms.push_back({iter2->first, -iter2->second}); 
+            iter2++;
+        }
+    }
+
+    // Copy remaining terms from the first polynomial
+    while (iter1 != sorted_terms1.end()) {
+        result.terms.push_back(*iter1);
+        iter1++;
+    }
+    // Copy remaining terms from the second polynomial with negation
+    while (iter2 != sorted_terms2.end()) {
+        result.terms.push_back({iter2->first, -iter2->second});
+        iter2++;
+    }
+    result.canonical_form();
+
+    return result;
+}
+polynomial polynomial::operator-(int constant) const{
+    // Copy the caller
+    polynomial result(*this);
+
+    // Check if there's already a term with power 0
+    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff>& term) {return term.first == 0;});
+
+    // If a term with power 0 exists, subtract the constant from its coefficient
+    if (it != result.terms.end()) {
+        it->second -= constant;
+    } else {
+        // No term with power 0 exists, add a new term with the negation of the constant
+        result.terms.push_back({0, -constant});
+    }
+    result.canonical_form();
+
+    return result;
+}
+polynomial operator-(int constant, const polynomial& poly){
+    // copy poly
+    polynomial result(poly);
+
+    // Check if there's already a term with power 0
+    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff>& term) { return term.first == 0; });
+
+    // If a term with power 0 exists, subtract the constant from its coefficient
+    if (it != result.terms.end()) {
+        it->second = constant - it->second;
+    }
+    // No term with power 0 exists, add a new term with the constant
+    else {
+        result.terms.push_back({0, constant});
+    }
+    result.canonical_form();
+
+    return result;
+}

@@ -303,19 +303,55 @@ polynomial operator*(int constant, const polynomial& poly){
 
 
 // % operator overload
-polynomial polynomial::operator%(const polynomial& other) const{
+polynomial polynomial::operator%(const polynomial& other) const {
+    polynomial remainder;
+    polynomial dividend(*this);
+    polynomial divisor(other);
 
-    if (other.terms.size() == 1 && other.terms[0].second == 0) {
-        return *this;  
+    dividend.canonical_form();
+    divisor.canonical_form();
+
+    // Check if the divisor is zero
+    if (divisor.terms.size() == 1 && divisor.terms[0].second == 0) {
+        return remainder;  
     }
 
-    // get remainder by using geting quotient
-    polynomial quotient = *this / other;  
-    polynomial product = other * quotient; 
-    polynomial remainder = *this - product; 
-    remainder.canonical_form();  
-    return remainder;
+    // Counter for consecutive same degrees, used for avoiding infinite while loop
+    // size_t consecutive_same_degree_count = 0;
+    // const size_t max_consecutive_same_degree = 1;
 
+    // Perform polynomial long division
+    while (dividend.find_degree_of() >= divisor.find_degree_of()) {
+        // Get the leading terms of the dividend and divisor
+        auto leading_term_dividend = dividend.canonical_form().front();
+        auto leading_term_divisor = divisor.canonical_form().front();
+
+        // get the quotient term
+        power quotient_power = leading_term_dividend.first - leading_term_divisor.first;
+        coeff quotient_coeff = leading_term_dividend.second / leading_term_divisor.second;
+
+        // Subtract from the dividend to get the remainder
+        std::vector<std::pair<power, coeff>> term_to_subtract_vector = {{quotient_power, quotient_coeff}};
+        polynomial term_to_subtract = divisor * polynomial(term_to_subtract_vector.begin(), term_to_subtract_vector.end());
+        dividend = dividend - term_to_subtract;
+
+        // Check if the degree of remaining terms in the dividend is not decreasing
+        if (dividend.find_degree_of() >= leading_term_dividend.first) {
+            break;
+        } 
+        // else {
+        //     consecutive_same_degree_count = 0; 
+        // }
+
+        // // Check if the consecutive same degree count exceeds the threshold to avoid infinite loop
+        // if (consecutive_same_degree_count >= max_consecutive_same_degree) {
+        //     break;  
+        // }
+    }
+
+    remainder = dividend;
+    remainder.canonical_form();
+    return remainder;
 }
 
 

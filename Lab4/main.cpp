@@ -6,10 +6,8 @@
 
 #include "poly.h"
 
-
-
-std::optional<double> poly_test(polynomial& p1,
-                                polynomial& p2,
+std::optional<double> poly_test(polynomial &p1,
+                                polynomial &p2,
                                 std::vector<std::pair<power, coeff>> solution)
 
 {
@@ -31,26 +29,24 @@ std::optional<double> poly_test(polynomial& p1,
     return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 }
 
-void bulky_Alan() {
+void bulky_Alan()
+{
     polynomial p1;
     std::cout << "Polynomial 1: ";
     p1.print();
     std::cout << "Degree of Polynomial 1: " << p1.find_degree_of() << std::endl;
     std::cout << std::endl;
-    
-    std::vector<std::pair<power, coeff>> terms = {{200, 3}, {100, -1},{32,0}, {300, 2}};
+
+    std::vector<std::pair<power, coeff>> terms = {{200, 3}, {100, -1}, {32, 0}, {300, 2}};
     polynomial p2(terms.begin(), terms.end());
     std::cout << "Polynomial 2: ";
     p2.print();
     std::cout << "Degree of Polynomial 2: " << p2.find_degree_of() << std::endl;
     std::cout << std::endl;
-
 }
 
-
-
-
-void test_mod(){
+void test_mod()
+{
     // Example 1
     std::vector<std::pair<power, coeff>> terms1 = {{4, 1}, {2, 2}, {0, -3}};
     polynomial p1(terms1.begin(), terms1.end());
@@ -84,12 +80,11 @@ void test_mod(){
     std::vector<std::pair<power, coeff>> terms6 = {{1, 1}, {0, -1}};
     polynomial p6(terms6.begin(), terms6.end());
     p5.print();
-    p6.print();  
+    p6.print();
     polynomial remainder3 = p5 % p6;
     std::cout << "Remainder after division (Example 3): ";
     remainder3.print();
     std::cout << "\n";
-
 
     p6.print();
     p5.print();
@@ -97,8 +92,6 @@ void test_mod(){
     std::cout << "Remainder after division (Example 4): ";
     remainder4.print();
     std::cout << "\n";
-
-
 
     // Example4
     std::vector<std::pair<power, coeff>> terms7 = {{10, 5}, {5, -3}, {2, 2}, {1, 1}};
@@ -116,19 +109,20 @@ void test_mod(){
     std::cout << "\n";
 
     // Example5
-    std::vector<std::pair<power, coeff>> terms9 = {{0,0}};
+    std::vector<std::pair<power, coeff>> terms9 = {{0, 0}};
     polynomial p9(terms9.begin(), terms9.end());
     p9.print();
     p8.print();
     polynomial result3 = p9 % p8;
     result3.print();
-    std::cout << "Degree of result3: " << result3.find_degree_of() << std::endl; 
-    
-    
-    std::cout << "\n"<< std::endl;
+    std::cout << "Degree of result3: " << result3.find_degree_of() << std::endl;
+
+    std::cout << "\n"
+              << std::endl;
 }
 
-void test_multi(){
+void test_multi()
+{
 
     // Example 1
     std::vector<std::pair<power, coeff>> terms1 = {{2, 3}, {1, -1}, {3, 2}};
@@ -173,13 +167,13 @@ void test_multi(){
     result3.print();
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
 
-    polynomial result4 =  constant * p5;
+    polynomial result4 = constant * p5;
     std::cout << "Result of constant * p5: ";
     result4.print();
 }
 
-
-void test_Long_expression_with_degree(){
+void test_Long_expression_with_degree()
+{
 
     // // Test Case 1
     std::vector<std::pair<power, coeff>> terms1 = {{200, 3}, {100, -1}, {32, 0}, {300, 2}};
@@ -215,11 +209,10 @@ void test_Long_expression_with_degree(){
 
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
     std::cout << "Time taken for expression 2: " << duration.count() << " microseconds" << std::endl;
-
-
 }
 
-void additional_test_cases() {
+void additional_test_cases()
+{
     // Case 1: Zero divisor
     std::vector<std::pair<power, coeff>> terms1 = {{4, 1}, {2, 2}, {0, -2}};
     polynomial p1(terms1.begin(), terms1.end());
@@ -239,7 +232,7 @@ void additional_test_cases() {
     polynomial zeroRemainder(zeroRemainderTerms.begin(), zeroRemainderTerms.end());
     zeroRemainder.print();
 
-    polynomial result2 =  p1 % zeroRemainder ;
+    polynomial result2 = p1 % zeroRemainder;
     std::cout << "Remainder after division (Zero remainder): ";
     result2.print();
     std::cout << "\n";
@@ -273,8 +266,8 @@ void additional_test_cases() {
     std::cout << "\n";
 }
 
-
-void test_div(){
+void test_div()
+{
     std::vector<std::pair<power, coeff>> terms1 = {{4, 1}, {2, 2}, {0, -2}};
     polynomial p1(terms1.begin(), terms1.end());
 
@@ -306,9 +299,10 @@ void test_div(){
     result_int_poly.print();
     polynomial result_int_poly1 = 4 / p3;
     std::cout << "Result of 4 / p3: ";
-    result_int_poly1.print();   
+    result_int_poly1.print();
 
-    std::cout<<"\n\n"<<std::endl;
+    std::cout << "\n\n"
+              << std::endl;
 
     std::vector<std::pair<power, coeff>> terms7 = {{10, 5}, {5, -3}, {2, 2}, {1, 1}};
     polynomial p7(terms7.begin(), terms7.end());
@@ -317,28 +311,25 @@ void test_div(){
     polynomial p8(terms8.begin(), terms8.end());
     p7.print();
     p8.print();
-    polynomial result2 = p7 / p8; 
+    polynomial result2 = p7 / p8;
     std::cout << "Result of p7 % p8;: ";
-    result2.print();   
-
-
+    result2.print();
 }
 
 int main()
 {
-    //bulky_Alan();
-    //test_multi();
-    test_mod();
-    //additional_test_cases();
-    //test_div();
-    
-    
+    // bulky_Alan();
+    test_multi();
+    // test_mod();
+    // additional_test_cases();
+    //  test_div();
+
     // test_Long_expression_with_degree();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
-    std::vector<std::pair<power, coeff>> solution = {{2,1}, {1,2}, {0,1}};
+    std::vector<std::pair<power, coeff>> solution = {{2, 1}, {1, 2}, {0, 1}};
 
     /** This holds (x+1), which we'll pass to each polynomial */
-    std::vector<std::pair<power, coeff>> poly_input = {{1,1}, {0,1}};
+    std::vector<std::pair<power, coeff>> poly_input = {{1, 1}, {0, 1}};
 
     polynomial p1(poly_input.begin(), poly_input.end());
     polynomial p2(poly_input.begin(), poly_input.end());
@@ -347,15 +338,12 @@ int main()
 
     if (result.has_value())
     {
-        std::cout << "Passed test, took " << result.value()/1000 << " seconds" << std::endl;
-    } 
-    else 
+        std::cout << "Passed test, took " << result.value() / 1000 << " seconds" << std::endl;
+    }
+    else
     {
         std::cout << "Failed test" << std::endl;
     }
-
-
-
 
     // test_mod();
 }

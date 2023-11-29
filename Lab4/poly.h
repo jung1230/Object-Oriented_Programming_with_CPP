@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <cstddef>
+#include <map>
 
 using power = size_t;
 using coeff = int;
@@ -35,7 +36,7 @@ public:
         // copy each item by using the iterator
         for (Iter it = begin; it != end; it++)
         {
-            terms.push_back(*it);
+            terms.insert(*it);
         }
     }
 
@@ -142,7 +143,7 @@ public:
 
 private:
     // Alan: This might not be the best solution
-    std::vector<std::pair<power, coeff>> terms;
+    std::map<power, coeff, std::greater<>> terms;
 };
 
 #endif

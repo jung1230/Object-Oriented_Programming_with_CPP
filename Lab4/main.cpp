@@ -320,7 +320,7 @@ int main()
 {
     // bulky_Alan();
     test_multi();
-    // test_mod();
+    test_mod();
     // additional_test_cases();
     //  test_div();
 

@@ -467,9 +467,10 @@ polynomial polynomial::operator%(const polynomial &other) const
     polynomial divisor(other.terms.begin(), other.terms.end());
     // dividend.canonical_form();
     // divisor.canonical_form();
-
+    auto last = divisor.terms.end();
+    last--;
     // Check if the divisor is zero
-    if (divisor.terms.size() == 1 && divisor.terms.end()->second == 0)
+    if (divisor.terms.size() == 1 && last->second == 0)
     {
         return remainder;
     }

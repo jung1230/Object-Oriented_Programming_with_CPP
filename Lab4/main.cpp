@@ -318,13 +318,13 @@ void test_div()
 
 int main()
 {
-    // bulky_Alan();
-    test_multi();
-    // test_mod();
-    // additional_test_cases();
+    bulky_Alan();
+    //test_multi();
+    //test_mod();
+    additional_test_cases();
     //  test_div();
 
-    // test_Long_expression_with_degree();
+    test_Long_expression_with_degree();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
     std::vector<std::pair<power, coeff>> solution = {{2, 1}, {1, 2}, {0, 1}};
 

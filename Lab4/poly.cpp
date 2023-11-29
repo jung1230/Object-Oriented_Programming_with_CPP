@@ -5,8 +5,10 @@
 #include <cstddef>
 #include <algorithm>
 #include <thread>
+#include <map>
+#include <iterator>
 
-const int num_of_threads = 4; // Number of threads
+const size_t num_of_threads = 4; // Number of threads
 /**
  * @brief Construct a new polynomial object that is the number 0 (ie. 0x^0)
  *
@@ -46,9 +48,9 @@ polynomial::polynomial(const polynomial &other)
 {
     // Alan
     // go through each terms and copy it. If i do not add const at the begining, error will occur
-    for (const std::pair<power, coeff> &term : other.terms)
+    for (const std::pair<power, coeff> term : other.terms)
     {
-        this->terms.push_back(term);
+        this->terms.insert(term);
     }
 }
 
@@ -101,9 +103,9 @@ polynomial &polynomial::operator=(const polynomial &other)
     this->terms.clear();
 
     // go through each term and copy it
-    for (const std::pair<power, coeff> &term : other.terms)
+    for (const std::pair<power, coeff> term : other.terms)
     {
-        this->terms.push_back(term);
+        this->terms.insert(term);
     }
 
     return *this;
@@ -117,17 +119,8 @@ polynomial &polynomial::operator=(const polynomial &other)
  */
 size_t polynomial::find_degree_of() const
 {
-    // Alan
-    std::vector<std::pair<power, coeff>> termss = canonical_form();
 
-    if (termss.empty())
-    {
-        return 0;
-    }
-    else
-    {
-        return termss.begin()->first;
-    }
+    return terms.begin()->first;
 }
 
 /**
@@ -152,49 +145,30 @@ size_t polynomial::find_degree_of() const
  */
 std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
 {
-    // Alan
-
+    polynomial temp(*this);
+    std::vector<size_t> delete_key;
+    auto it = temp.terms.begin();
+    // Iterate the map to find whose coefficient is zero
+    while(1){
+        if(it->second == 0)
+            delete_key.push_back(it->first);
+        if(it == temp.terms.end())
+            break;
+        it++;
+    }
+    // Delete the key whose coefficient is zero
+    for(auto keyy: delete_key){
+        temp.terms.erase(keyy);
+    }
+    if(temp.terms.empty())
+        temp.terms.insert({0,0});
     // copy all the terms
-    std::vector<std::pair<power, coeff>> sorted_terms = terms;
-    // sort it by using sort in algrithm
-    std::sort(sorted_terms.begin(), sorted_terms.end(), std::greater<>());
-
-    // Remove terms with coefficient 0. remove_if is used to move elements with a coefficient of 0 to the end of the vector, and erase is used to remove elements from the iterator returned by std::remove_if to the end of the vector.
-    // sorted_terms.erase(std::remove_if(sorted_terms.begin(), sorted_terms.end(),[](const auto &term) { return term.second == 0; }),sorted_terms.end());
-
-    std::vector<std::pair<power, coeff>> combined_terms;
-
-    for (const auto &term : sorted_terms)
-    {
-        // If the term's power does not match the last term's power,  or the combined_terms vector is empty, add the term
-        if (term.second == 0)
-        {
-            continue;
-        }
-        else if (combined_terms.empty() || term.first != combined_terms.back().first)
-        {
-            combined_terms.push_back(term);
-        }
-        // If the powers are same, sum coefficients
-        else
-        {
-            if (combined_terms.back().second + term.second != 0)
-            {
-                combined_terms.back().second += term.second;
-            }
-            else
-                combined_terms.pop_back();
-        }
+    std::vector<std::pair<power, coeff>> sorted_terms;
+    for(const auto& pairr: temp.terms){
+        sorted_terms.push_back(pairr);
     }
 
-    if (combined_terms.empty())
-    {
-        std::vector<std::pair<power, coeff>> zero;
-        zero = {{0, 0}};
-        return zero;
-    }
-
-    return combined_terms;
+    return sorted_terms;
 }
 
 // + operator overload
@@ -202,70 +176,94 @@ std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
 polynomial polynomial::operator+(const polynomial &other) const
 {
     polynomial result;
-    std::vector<std::pair<power, coeff>> sorted_terms1 = canonical_form();
-    std::vector<std::pair<power, coeff>> sorted_terms2 = other.canonical_form();
+    //std::cout << "Inside +" << std::endl;
+    //result.print();
+    // std::vector<std::pair<power, coeff>> sorted_terms1 = canonical_form();
+    // std::vector<std::pair<power, coeff>> sorted_terms2 = other.canonical_form();
 
-    auto iter1 = sorted_terms1.begin();
-    auto iter2 = sorted_terms2.begin();
+    auto iter1 = terms.begin();
+    auto iter2 = other.terms.begin();
 
-    // loop throug both polynomial
-    while (iter1 != sorted_terms1.end() && iter2 != sorted_terms2.end())
+    // loop through both polynomial
+    while (iter1 != terms.end() && iter2 != other.terms.end())
     {
         // if both term have same power
         if (iter1->first == iter2->first)
         {
-            result.terms.push_back({iter1->first, iter1->second + iter2->second});
+            if(iter1->second + iter2->second != 0){
+                if(iter2->first == 0){ // Map cannot insert the key value pair if there is already the key in the map
+                    result.terms.erase(0);
+                }
+                result.terms.insert({iter1->first, iter1->second + iter2->second});
+            }
             iter1++;
             iter2++;
         }
         // if first term is bigger than second, move the first one into result directly
         else if (iter1->first > iter2->first)
         {
-            result.terms.push_back(*iter1);
+            result.terms.insert(*iter1);
             iter1++;
         }
         else
         {
-            result.terms.push_back(*iter2);
+            result.terms.insert(*iter2);
             iter2++;
         }
     }
 
     // Copy remaining terms for terms1
-    while (iter1 != sorted_terms1.end())
+    while (iter1 != terms.end())
     {
-        result.terms.push_back(*iter1);
+        if(iter1->first == 0){
+            result.terms.erase(0);
+            result.terms.insert(*iter1);
+        }
+        else
+            result.terms.insert(*iter1);
         iter1++;
     }
     // Copy remaining terms for terms2
-    while (iter2 != sorted_terms2.end())
+    while (iter2 != other.terms.end())
     {
-        result.terms.push_back(*iter2);
+        if(iter2->first == 0){
+            result.terms.erase(0);
+            result.terms.insert(*iter2);
+        }
+        else
+            result.terms.insert(*iter2);
         iter2++;
     }
-
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 polynomial polynomial::operator+(int constant) const
 {
     // copy caller
+    // std::cout << "Inside poly + constant" << std::endl;
+    // print();
     polynomial result(*this);
-
+    // result.print();
     // Check if there's already a term with power 0
-    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff> &term)
-                           { return term.first == 0; });
-
+    auto it = result.terms.end();
+    it--;
+    // std::cout << it->first << " " << it->second << std::endl;
     // If a term with power 0 exists, add the constant to its coefficient
-    if (it != result.terms.end())
+    if (it->first == 0)
     {
         it->second += constant;
+        if(it->second == 0)
+            result.terms.erase(it->first);
     }
     // No term with power 0 exists, add a new term for the constant
     else
     {
-        result.terms.push_back({0, constant});
+        if(constant != 0)
+            result.terms.insert({0, constant});
     }
-
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 // Note: the friend function declaration is done outside the class scope, and it does not have the polynomial:: prefix. This is because it is not a member function of the polynomial class.
@@ -275,19 +273,23 @@ polynomial operator+(int constant, const polynomial &poly)
     polynomial result(poly);
 
     // Check if there's already a term with power 0
-    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff> &term)
-                           { return term.first == 0; });
-
+    auto it = result.terms.end();
+    it--;
     // If a term with power 0 exists, add the constant to its coefficient
-    if (it != result.terms.end())
+    if (it->first == 0)
     {
         it->second += constant;
+        if(it->second == 0)
+            result.terms.erase(it->first);
     }
     // No term with power 0 exists, add a new term for the constant
     else
     {
-        result.terms.push_back({0, constant});
+        if(constant != 0)
+            result.terms.insert({0, constant});
     }
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 
@@ -297,38 +299,53 @@ polynomial polynomial::operator*(const polynomial &other) const
     polynomial result;
     std::vector<std::thread> threads;
     std::vector<polynomial> results;
+    //std::vector<int> counts;
 
     // Lamda function for thread to do the multiply
-    auto thread_multiply = [this, &results, &other](int thread_ID, int total_thread_num)
+    auto thread_multiply = [this, &results, &other](size_t thread_ID, size_t total_thread_num)
     {
-        for (long unsigned int i = thread_ID; i < terms.size(); i = i + total_thread_num)
-        { // Divide the workload
+        auto it = this->terms.begin();
+        std::advance(it, thread_ID);
+        for (size_t i = thread_ID; i < terms.size(); i = i + total_thread_num)// Divide the workload
+        { 
+            //counts[thread_ID] = 1;
+            if(i != thread_ID)
+                std::advance(it, total_thread_num);
             for (const auto &term2 : other.terms)
             {
-                results[thread_ID].terms.push_back({this->terms[i].first + term2.first, this->terms[i].second * term2.second});
+                if(it->first == 0) // If key already exists in the map, insert the same key will fail. So we need to erase first
+                    results[thread_ID].terms.erase(it->first);
+                results[thread_ID].terms.insert({it->first + term2.first, it->second * term2.second});
             }
         }
     };
-    for (int i = 0; i < num_of_threads; i++)
+    for (size_t i = 0; i < num_of_threads; i++)
     {
         results.push_back(polynomial());
+        //counts.push_back(0);
     }
     // Launch the threads
-    for (int i = 0; i < num_of_threads; i++)
+    for (size_t i = 0; i < num_of_threads; i++)
     {
         threads.push_back(std::thread(thread_multiply, i, num_of_threads));
     }
 
     // Join the threads
-    for (int i = 0; i < num_of_threads; i++)
+    for (size_t i = 0; i < num_of_threads; i++)
     {
         threads[i].join();
     }
-
+    //std::cout << "MUL done" << std::endl;
     for (auto &mul_term : results)
     {
+        //mul_term.print();
         result = result + mul_term;
     }
+    // std::cout << "Result of thread going into for loop" << std::endl;
+    // for(auto&count: counts){
+    //     std::cout << count << "  ";
+    // }
+    // std::cout << std::endl;
     // std::cout << "Threads are joined" << std::endl;
     return result;
     /*for (const std::pair<power, coeff> &term1 : this->terms)
@@ -346,38 +363,114 @@ polynomial polynomial::operator*(const polynomial &other) const
 polynomial polynomial::operator*(int constant) const
 {
     polynomial result;
-
-    for (const std::pair<power, coeff> &term : this->terms)
+    std::vector<std::thread> threads;
+    std::vector<polynomial> results;
+    // Lamda function for thread to do the multiply
+    auto thread_multiply = [this, &results, &constant](size_t thread_ID, size_t total_thread_num)
     {
-        // Multiply the coefficient by the constant
-        result.terms.push_back({term.first, term.second * constant});
+        auto it = this->terms.begin();
+        std::advance(it, thread_ID);
+        for (size_t i = thread_ID; i < terms.size(); i = i + total_thread_num)
+        { // Divide the workload
+            if(i != thread_ID)
+                std::advance(it, total_thread_num);
+            if(it->first == 0)
+                results[thread_ID].terms.erase(it->first);
+            results[thread_ID].terms.insert({it->first, it->second * constant});
+        }
+    };
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        results.push_back(polynomial());
     }
+    // Launch the threads
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        threads.push_back(std::thread(thread_multiply, i, num_of_threads));
+    }
+
+    // Join the threads
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        threads[i].join();
+    }
+
+    for (auto &mul_term : results)
+    {
+        result = result + mul_term;
+    }
+
     return result;
+    // for (const std::pair<power, coeff> &term : this->terms)
+    // {
+    //     // Multiply the coefficient by the constant
+    //     result.terms.push_back({term.first, term.second * constant});
+    // }
+    // return result;
 }
 polynomial operator*(int constant, const polynomial &poly)
 {
+    // std::cout << "Inside *" << std::endl;
     polynomial result;
-
-    for (const std::pair<power, coeff> &term : poly.terms)
+    std::vector<std::thread> threads;
+    std::vector<polynomial> results;
+    // Lamda function for thread to do the multiply
+    auto thread_multiply = [poly, &results, constant](size_t thread_ID, size_t total_thread_num)
     {
-        // Multiply the coefficient by the constant
-        result.terms.push_back({term.first, term.second * constant});
+        auto it = poly.terms.begin();
+        std::advance(it, thread_ID);
+        for (size_t i = thread_ID; i < poly.terms.size(); i = i + total_thread_num)
+        { // Divide the workload
+            if(i != thread_ID)
+                std::advance(it, total_thread_num);
+            if(it->first == 0)
+                results[thread_ID].terms.erase(it->first);
+            results[thread_ID].terms.insert({it->first, it->second * constant});
+        }
+    };
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        results.push_back(polynomial());
     }
+    // Launch the threads
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        threads.push_back(std::thread(thread_multiply, i, num_of_threads));
+    }
+
+    // Join the threads
+    for (size_t i = 0; i < num_of_threads; i++)
+    {
+        threads[i].join();
+    }
+
+    for (auto &mul_term : results)
+    {
+        result = result + mul_term;
+    }
+    // result.print();
     return result;
+    // for (const std::pair<power, coeff> &term : poly.terms)
+    // {
+    //     // Multiply the coefficient by the constant
+    //     result.terms.push_back({term.first, term.second * constant});
+    // }
+    // return result;
 }
 
 // % operator overload
 polynomial polynomial::operator%(const polynomial &other) const
 {
     polynomial remainder;
-    polynomial dividend(*this);
-    polynomial divisor(other);
-
-    dividend.canonical_form();
-    divisor.canonical_form();
-
+    // std::cout << "Inside Mod" << std::endl;
+    polynomial dividend(this->terms.begin(), this->terms.end());
+    polynomial divisor(other.terms.begin(), other.terms.end());
+    // dividend.canonical_form();
+    // divisor.canonical_form();
+    auto last = divisor.terms.end();
+    last--;
     // Check if the divisor is zero
-    if (divisor.terms.size() == 1 && divisor.terms[0].second == 0)
+    if (divisor.terms.size() == 1 && last->second == 0)
     {
         return remainder;
     }
@@ -390,8 +483,8 @@ polynomial polynomial::operator%(const polynomial &other) const
     while (dividend.find_degree_of() >= divisor.find_degree_of())
     {
         // Get the leading terms of the dividend and divisor
-        auto leading_term_dividend = dividend.canonical_form().front();
-        auto leading_term_divisor = divisor.canonical_form().front();
+        auto leading_term_dividend = *(dividend.terms.begin());
+        auto leading_term_divisor = *(divisor.terms.begin());
 
         // get the quotient term
         power quotient_power = leading_term_dividend.first - leading_term_divisor.first;
@@ -401,7 +494,7 @@ polynomial polynomial::operator%(const polynomial &other) const
         std::vector<std::pair<power, coeff>> term_to_subtract_vector = {{quotient_power, quotient_coeff}};
         polynomial term_to_subtract = divisor * polynomial(term_to_subtract_vector.begin(), term_to_subtract_vector.end());
         dividend = dividend - term_to_subtract;
-        dividend.print();
+        //dividend.print();
         // Check if the degree of remaining terms in the dividend is not decreasing
         if (dividend.find_degree_of() >= leading_term_dividend.first)
         {
@@ -425,49 +518,56 @@ polynomial polynomial::operator-(const polynomial &other) const
 {
 
     polynomial result;
-    std::vector<std::pair<power, coeff>> sorted_terms1 = canonical_form();
-    std::vector<std::pair<power, coeff>> sorted_terms2 = other.canonical_form();
 
-    auto iter1 = sorted_terms1.begin();
-    auto iter2 = sorted_terms2.begin();
+    auto iter1 = this->terms.begin();
+    auto iter2 = other.terms.begin();
 
     // Loop through both polynomials
-    while (iter1 != sorted_terms1.end() && iter2 != sorted_terms2.end())
+    while (iter1 != this->terms.end() && iter2 != other.terms.end())
     {
         // If both terms have the same power
         if (iter1->first == iter2->first)
         {
-            result.terms.push_back({iter1->first, iter1->second - iter2->second});
+            if(iter1->second - iter2->second != 0){
+                if(iter2->first == 0)
+                    result.terms.erase(0);
+                result.terms.insert({iter1->first, iter1->second - iter2->second});
+            }
             iter1++;
             iter2++;
         }
         // if first term is bigger than second, move the first one into result directly
         else if (iter1->first > iter2->first)
         {
-            result.terms.push_back(*iter1);
+            result.terms.insert(*iter1);
             iter1++;
         }
         else
         {
             // Subtract the second term
-            result.terms.push_back({iter2->first, -iter2->second});
+            result.terms.insert({iter2->first, -iter2->second});
             iter2++;
         }
     }
 
     // Copy remaining terms from the first polynomial
-    while (iter1 != sorted_terms1.end())
+    while (iter1 != this->terms.end())
     {
-        result.terms.push_back(*iter1);
+        if(iter1->first == 0)
+            result.terms.erase(0);
+        result.terms.insert(*iter1);
         iter1++;
     }
     // Copy remaining terms from the second polynomial with negation
-    while (iter2 != sorted_terms2.end())
+    while (iter2 != other.terms.end())
     {
-        result.terms.push_back({iter2->first, -iter2->second});
+        if(iter2->first == 0)
+            result.terms.erase(0);
+        result.terms.insert(*iter2);
         iter2++;
     }
-
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 polynomial polynomial::operator-(int constant) const
@@ -476,20 +576,24 @@ polynomial polynomial::operator-(int constant) const
     polynomial result(*this);
 
     // Check if there's already a term with power 0
-    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff> &term)
-                           { return term.first == 0; });
-
+    auto it = result.terms.end();
+    it--;
     // If a term with power 0 exists, subtract the constant from its coefficient
-    if (it != result.terms.end())
+    if (it->first == 0)
     {
-        it->second -= constant;
+        if(it->second - constant !=0)
+            it->second -= constant;
+        else
+            result.terms.erase(it->first);
     }
     else
     {
         // No term with power 0 exists, add a new term with the negation of the constant
-        result.terms.push_back({0, -constant});
+        if(constant != 0)
+            result.terms.insert({0, -constant});
     }
-
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 polynomial operator-(int constant, const polynomial &poly)
@@ -498,20 +602,24 @@ polynomial operator-(int constant, const polynomial &poly)
     polynomial result(poly);
 
     // Check if there's already a term with power 0
-    auto it = std::find_if(result.terms.begin(), result.terms.end(), [](const std::pair<power, coeff> &term)
-                           { return term.first == 0; });
-
+    auto it = result.terms.end();
+    it--;
     // If a term with power 0 exists, subtract the constant from its coefficient
-    if (it != result.terms.end())
+    if (it->first == 0)
     {
-        it->second = constant - it->second;
+        if(constant - it->second != 0)
+            it->second = constant - it->second;
+        else
+            result.terms.erase(it->first);
     }
     // No term with power 0 exists, add a new term with the constant
     else
     {
-        result.terms.push_back({0, constant});
+        if(constant != 0)
+            result.terms.insert({0, constant});
     }
-
+    if(result.terms.empty())
+        result.terms.insert({0,0});
     return result;
 }
 
@@ -522,12 +630,9 @@ polynomial polynomial::operator/(const polynomial &other) const
     polynomial dividend(*this);
     polynomial divisor(other);
 
-    // Canonicalize the polynomials
-    dividend.canonical_form();
-    divisor.canonical_form();
 
     // Check if the divisor is zero
-    if (divisor.terms.size() == 1 && divisor.terms[0].second == 0)
+    if (divisor.terms.size() == 1 && divisor.terms.begin()->second == 0)
     {
         return quotient;
     }
@@ -540,8 +645,8 @@ polynomial polynomial::operator/(const polynomial &other) const
     while (dividend.find_degree_of() >= divisor.find_degree_of())
     {
         // Get the leading terms of the dividend and divisor
-        auto leading_term_dividend = dividend.canonical_form().front();
-        auto leading_term_divisor = divisor.canonical_form().front();
+        auto leading_term_dividend = *(dividend.terms.begin());
+        auto leading_term_divisor = *(divisor.terms.begin());
 
         // get the quotient term
         power quotient_power = leading_term_dividend.first - leading_term_divisor.first;
@@ -573,7 +678,7 @@ polynomial polynomial::operator/(const polynomial &other) const
         }
     }
 
-    quotient.canonical_form();
+    //quotient.canonical_form();
     return quotient;
 }
 
@@ -600,20 +705,20 @@ polynomial polynomial::operator/(int constant) const
 polynomial operator/(int constant, const polynomial &poly)
 {
     // Check if the polynomial is zero
-    if (poly.terms.size() == 1 && poly.terms[0].second == 0)
+    if (poly.terms.size() == 1 && poly.terms.begin()->second == 0)
     {
         return polynomial();
     }
 
     polynomial result;
 
-    if (poly.terms.size() == 1 && poly.terms[0].first == 0)
+    if (poly.terms.size() == 1 && poly.terms.begin()->first == 0)
     {
-        result.terms.push_back({0, constant / poly.terms[0].second});
+        result.terms.insert({0, constant / poly.terms.begin()->second});
     }
     else
     {
-        result.terms.push_back({0, 0});
+        result.terms.insert({0, 0});
     }
 
     return result;

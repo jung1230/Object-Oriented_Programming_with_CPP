@@ -305,7 +305,7 @@ polynomial polynomial::operator*(const polynomial &other) const
         { // Divide the workload
             for (const auto &term2 : other.terms)
             {
-                results[i].terms.push_back({this->terms[i].first + term2.first, this->terms[i].second * term2.second});
+                results[thread_ID].terms.push_back({this->terms[i].first + term2.first, this->terms[i].second * term2.second});
             }
         }
     };

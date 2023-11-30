@@ -5,6 +5,8 @@
 #include <utility>
 #include <cstddef>
 #include <map>
+#include<fstream>
+#include<sstream>
 
 using power = size_t;
 using coeff = int;
@@ -140,6 +142,9 @@ public:
     polynomial operator/(const polynomial& other) const;
     polynomial operator/(int constant) const;
     friend polynomial operator/(int constant, const polynomial& poly);
+
+    void addTerm(power expo, coeff num);
+    void outputprint(std::ostream& os) const;
 
 private:
     // Alan: This might not be the best solution

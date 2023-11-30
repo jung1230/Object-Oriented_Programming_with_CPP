@@ -3,6 +3,8 @@
 #include <optional>
 #include <vector>
 #include <chrono>
+#include<fstream>
+#include<sstream>
 
 #include "poly.h"
 
@@ -316,16 +318,123 @@ void test_div()
     result2.print();
 }
 
+void test_sparse(){
+    // Test 1
+    std::vector<std::pair<power, coeff>> terms1 = {{10001, 3}, {1, -1}, {3, 2}};
+    polynomial p1(terms1.begin(), terms1.end());
+    p1.print();
+
+    std::vector<std::pair<power, coeff>> terms2 = {{0, 2}};
+    polynomial p2(terms2.begin(), terms2.end());
+    p2.print();
+
+    polynomial result1 = p1 * p2;
+    std::cout << "Result of p1 * p2: ";
+    result1.print();
+    std::cout << "Degree of Result: " << result1.find_degree_of() << std::endl;
+    std::cout << std::endl;
+    //Test 2
+    std::vector<std::pair<power, coeff>> terms3 = {{10001, 3}, {1, -1}, {3, 2}, {6969, 5}, {3737, 2}, {0, 87}};
+    polynomial p3(terms3.begin(), terms3.end());
+    p3.print();
+
+    std::vector<std::pair<power, coeff>> terms4 = {{0, 2}};
+    polynomial p4(terms4.begin(), terms4.end());
+    p4.print();
+
+    polynomial result2 = p3 * p4;
+    std::cout << "Result of p3 * p4: ";
+    result2.print();
+    std::cout << "Degree of Result: " << result2.find_degree_of() << std::endl;
+    std::cout << std::endl;
+    //Test 3
+    std::vector<std::pair<power, coeff>> terms5 = {{10001, 3}, {1, -1}, {3, 2}, {6969, 5}, {3737, 2}, {0, 87}};
+    polynomial p5(terms5.begin(), terms5.end());
+    p5.print();
+
+    std::vector<std::pair<power, coeff>> terms6 = {{0, 0}};
+    polynomial p6(terms6.begin(), terms6.end());
+    p6.print();
+
+    polynomial result3 = p5 * p6;
+    std::cout << "Result of p5 * p6: ";
+    result3.print();
+    std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
+    std::cout << std::endl;
+
+}
+
+void parsefile(const std::string& filename, std::vector<polynomial> & test){
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    polynomial currentPolynomial = polynomial();
+
+    while (std::getline(file, line)) {
+        if (line == ";") {
+            // End of polynomial, add it to the vector and reset
+            //currentPolynomial.print();
+            test.push_back(currentPolynomial);
+            currentPolynomial = polynomial();
+        } 
+        else {
+            // Parse coefficient and power from the line
+            std::istringstream iss(line);
+            coeff coefficient;
+            power exponent;
+            char x;  // To consume 'x'
+            iss >> coefficient >> x >> x >> exponent;
+            currentPolynomial.addTerm(exponent, coefficient);
+        }
+    }
+
+    file.close();
+}
+
+void writePolynomialsToFile(const std::string& filename, const polynomial& answer) {
+    std::ofstream outfile(filename);
+    if (!outfile.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    answer.outputprint(outfile);
+
+    outfile.close();
+}
+
+void test_simple(){
+    std::vector<polynomial> test;
+    parsefile("simple_poly.txt", test);
+    // for(auto & poly: test){
+    //     poly.print();
+    // }
+    std::vector<std::pair<power, coeff>> terms1 = {{0,1}};
+    polynomial test_poly(terms1.begin(), terms1.end());
+    for(auto & poly: test){
+        test_poly = test_poly * poly;
+    }
+    std::cout << "Mul is done" << std::endl;
+    // test_poly.print();
+    writePolynomialsToFile("output.txt", test_poly);
+}
 int main()
 {
-    bulky_Alan();
+    //bulky_Alan();
     //test_multi();
     //test_mod();
-    additional_test_cases();
+    //additional_test_cases();
     //  test_div();
 
-    test_Long_expression_with_degree();
+    //test_Long_expression_with_degree();
+    // test_sparse();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
+    test_simple();
+
     std::vector<std::pair<power, coeff>> solution = {{2, 1}, {1, 2}, {0, 1}};
 
     /** This holds (x+1), which we'll pass to each polynomial */

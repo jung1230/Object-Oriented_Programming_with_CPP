@@ -5,7 +5,7 @@
 #include <chrono>
 #include<fstream>
 #include<sstream>
-
+#include <cassert> 
 #include "poly.h"
 
 std::optional<double> poly_test(polynomial &p1,
@@ -50,10 +50,10 @@ void bulky_Alan()
 void test_mod()
 {
     // Example 1
-    std::vector<std::pair<power, coeff>> terms1 = {{4, 1}, {2, 2}, {0, -3}};
+    std::vector<std::pair<power, coeff>> terms1 = {{0, -3},{4, 1},{2, 2}};
     polynomial p1(terms1.begin(), terms1.end());
     p1.print();
-    std::vector<std::pair<power, coeff>> terms2 = {{2, 1}, {0, 1}};
+    std::vector<std::pair<power, coeff>> terms2 = {{0, 1},{2, 1}};
     polynomial p2(terms2.begin(), terms2.end());
     p2.print();
 
@@ -270,8 +270,9 @@ void additional_test_cases()
     std::vector<std::pair<power, coeff>> zeroRemainderTerms = {{2, 1}, {0, 1}};
     polynomial zeroRemainder(zeroRemainderTerms.begin(), zeroRemainderTerms.end());
     zeroRemainder.print();
-
-    polynomial result2 = p1 % zeroRemainder;
+    zeroRemainder.print();
+    std::cout <<"zeroRemainder.find_degree_of();"<<zeroRemainder.find_degree_of();
+    polynomial result2 = zeroRemainder % zeroRemainder;
     std::cout << "Remainder after division (Zero remainder): ";
     result2.print();
     std::cout << "\n";
@@ -305,55 +306,7 @@ void additional_test_cases()
     std::cout << "\n";
 }
 
-void test_div()
-{
-    std::vector<std::pair<power, coeff>> terms1 = {{4, 1}, {2, 2}, {0, -2}};
-    polynomial p1(terms1.begin(), terms1.end());
 
-    std::vector<std::pair<power, coeff>> terms2 = {{2, 1}, {0, 2}};
-    polynomial p2(terms2.begin(), terms2.end());
-
-    std::vector<std::pair<power, coeff>> terms3 = {{0, 2}};
-    polynomial p3(terms3.begin(), terms3.end());
-    std::cout << "Polynomial p1: ";
-    p1.print();
-    std::cout << "Polynomial p2: ";
-    p2.print();
-    std::cout << "Polynomial p3: ";
-    p3.print();
-
-    // Test the / operator for polynomial / polynomial
-    polynomial result_poly_poly = p1 / p2;
-    std::cout << "Result of p1 / p2: ";
-    result_poly_poly.print();
-
-    // Test the / operator for polynomial / int
-    polynomial result_poly_int = p1 / 2;
-    std::cout << "Result of p1 / 2: ";
-    result_poly_int.print();
-
-    // Test the / operator for int / polynomial
-    polynomial result_int_poly = 4 / p2;
-    std::cout << "Result of 4 / p2: ";
-    result_int_poly.print();
-    polynomial result_int_poly1 = 4 / p3;
-    std::cout << "Result of 4 / p3: ";
-    result_int_poly1.print();
-
-    std::cout << "\n\n"
-              << std::endl;
-
-    std::vector<std::pair<power, coeff>> terms7 = {{10, 5}, {5, -3}, {2, 2}, {1, 1}};
-    polynomial p7(terms7.begin(), terms7.end());
-
-    std::vector<std::pair<power, coeff>> terms8 = {{8, 4}, {4, 2}, {2, -1}};
-    polynomial p8(terms8.begin(), terms8.end());
-    p7.print();
-    p8.print();
-    polynomial result2 = p7 / p8;
-    std::cout << "Result of p7 % p8;: ";
-    result2.print();
-}
 
 void test_sparse(){
     // Test 1
@@ -481,18 +434,64 @@ void test_simple(){
     // test_poly.print();
     writePolynomialsToFile("output.txt", test_poly);
 }
+
+void test_find_degree_of() {
+
+
+    // Test case 1: Polynomial with a single term
+    std::vector<std::pair<power, coeff>> terms1 = {{3, 2}};
+    polynomial p1(terms1.begin(), terms1.end());
+    assert(p1.find_degree_of() == 3);
+
+    // Test case 2: Polynomial with multiple terms
+    std::vector<std::pair<power, coeff>> terms2 ={{2, 5}, {4, 2}, {1, 7}};
+    polynomial p2(terms2.begin(), terms2.end());
+    assert(p2.find_degree_of() == 4);
+
+    // Test case 3: Empty polynomial
+    polynomial poly3;
+    assert(poly3.find_degree_of() == 0);
+
+    // Test case 4: Constant polynomial
+    std::vector<std::pair<power, coeff>> terms3 ={{0, 8}};
+    polynomial poly4(terms3.begin(), terms3.end());
+    assert(poly4.find_degree_of() == 0);
+
+    // Test case 5: Polynomial with zero coefficients
+    std::vector<std::pair<power, coeff>> terms4 ={{3, 0}, {1, 0}, {0, 0}};
+    polynomial poly5(terms4.begin(), terms4.end());
+    poly5.print();
+    assert(poly5.find_degree_of() == 0);
+
+    std::vector<std::pair<power, coeff>> terms5 ={{3, 4}, {2, 7}, {3, 1}};
+    polynomial poly6(terms5.begin(), terms5.end());
+    poly6.print();
+    poly6.print();
+    
+    assert(poly6.find_degree_of() == 3);
+    polynomial result = poly6 + poly6;
+    result.print();
+    result.print();
+
+    result.print();
+    assert(result.find_degree_of() == 3);
+
+    std::cout << "All test cases passed!" << std::endl;
+}
+
 int main()
 {
-    //bulky_Alan();
-    //test_multi();
+    // bulky_Alan();
+    // test_multi();
     //test_mod();
-    //additional_test_cases();
-    //  test_div();
-    // long_express();
-    // test_Long_expression_with_degree();
+    // additional_test_cases();
+    //  long_express();
+    //  test_Long_expression_with_degree();
     // test_sparse();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
-    test_simple();
+    // test_simple();
+    test_find_degree_of();
+    
 
     std::vector<std::pair<power, coeff>> solution = {{2, 1}, {1, 2}, {0, 1}};
 

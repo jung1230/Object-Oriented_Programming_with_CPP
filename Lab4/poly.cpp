@@ -326,80 +326,94 @@ polynomial operator+(int constant, const polynomial &poly)
 
 // * operator overload
 polynomial polynomial::operator*(const polynomial &other) const
-{
+{    
     polynomial result;
-    std::vector<std::thread> threads;
-    std::vector<polynomial> results;
-    std::vector<polynomial> multipliers;
-    //std::vector<int> counts;
+    // Check the sizes of both polynomials
+    size_t size1 = terms.size();
+    size_t size2 = other.terms.size();
 
-    // Lamda function for thread to do the multiply
-    auto thread_multiply = [this, &results, &other, &multipliers](size_t thread_ID, size_t total_thread_num)
+
+// Use multiple threads for the larger polynomial
+    if (size1 >= 10 && size2 >= 10)
     {
-        auto it = this->terms.begin();
-        std::advance(it, thread_ID);
-        for (size_t i = thread_ID; i < terms.size(); i = i + total_thread_num)// Divide the workload
-        { 
-            //counts[thread_ID] = 1;
-            if(i != thread_ID)
-                std::advance(it, total_thread_num);
-            for (const auto &term2 : multipliers[thread_ID].terms)
+        //std::cout<<"+++++++++++++++++++++++++++++++++++++++++++thread++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
+
+        std::vector<std::thread> threads;
+        std::vector<polynomial> results;
+        std::vector<polynomial> multipliers;
+        //std::vector<int> counts;
+
+        // Lamda function for thread to do the multiply
+        auto thread_multiply = [this, &results, &other, &multipliers](size_t thread_ID, size_t total_thread_num)
+        {
+            auto it = this->terms.begin();
+            std::advance(it, thread_ID);
+            for (size_t i = thread_ID; i < terms.size(); i = i + total_thread_num)// Divide the workload
+            { 
+                //counts[thread_ID] = 1;
+                if(i != thread_ID)
+                    std::advance(it, total_thread_num);
+                for (const auto &term2 : multipliers[thread_ID].terms)
+                {
+                    // if(it->first == 0) // If key already exists in the map, insert the same key will fail. So we need to erase first
+                    //     results[thread_ID].terms.erase(it->first);
+                    // results[thread_ID].terms.insert({it->first + term2.first, it->second * term2.second});
+                    auto result_iter = results[thread_ID].terms.emplace(it->first + term2.first, it->second * term2.second);
+
+                    // If the term already exists, update its coefficient
+                    if (!result_iter.second)
+                    {
+                        result_iter.first->second += it->second * term2.second;
+                    }
+                }
+            }
+        };
+        for (size_t i = 0; i < num_of_threads; i++)
+        {
+            results.push_back(polynomial());
+            multipliers.push_back(other);
+        }
+        // std::cout << "Here I am" << std::endl;
+        // Launch the threads
+        for (size_t i = 0; i < num_of_threads; i++)
+        {
+            threads.push_back(std::thread(thread_multiply, i, num_of_threads));
+        }
+
+        // Join the threads
+        for (size_t i = 0; i < num_of_threads; i++)
+        {
+            threads[i].join();
+        }
+        // std::cout << "MUL done" << std::endl;
+        for (auto &mul_term : results)
+        {
+            //mul_term.print();
+            result = result + mul_term;
+        }
+    }
+// Use a single thread for both polynomials
+    else
+    {
+        //std::cout<<"------------------------------------single-------------------------------------"<<std::endl;
+        for (const auto term1 : this->terms)
+        {
+            for (const auto term2 : other.terms)
             {
-                // if(it->first == 0) // If key already exists in the map, insert the same key will fail. So we need to erase first
-                //     results[thread_ID].terms.erase(it->first);
-                // results[thread_ID].terms.insert({it->first + term2.first, it->second * term2.second});
-                auto result_iter = results[thread_ID].terms.emplace(it->first + term2.first, it->second * term2.second);
+                // Multiply the coefficients and add the powers
+                auto result_iter = result.terms.emplace(term1.first + term2.first, term1.second * term2.second);
 
                 // If the term already exists, update its coefficient
                 if (!result_iter.second)
                 {
-                    result_iter.first->second += it->second * term2.second;
+                    result_iter.first->second += term1.second * term2.second;
                 }
             }
         }
-    };
-    for (size_t i = 0; i < num_of_threads; i++)
-    {
-        results.push_back(polynomial());
-        multipliers.push_back(other);
-        //counts.push_back(0);
-    }
-    // std::cout << "Here I am" << std::endl;
-    // Launch the threads
-    for (size_t i = 0; i < num_of_threads; i++)
-    {
-        threads.push_back(std::thread(thread_multiply, i, num_of_threads));
     }
 
-    // Join the threads
-    for (size_t i = 0; i < num_of_threads; i++)
-    {
-        threads[i].join();
-    }
-    // std::cout << "MUL done" << std::endl;
-    for (auto &mul_term : results)
-    {
-        //mul_term.print();
-        result = result + mul_term;
-    }
-    // std::cout << "Result of thread going into for loop" << std::endl;
-    // for(auto&count: counts){
-    //     std::cout << count << "  ";
-    // }
-    // std::cout << std::endl;
-    // std::cout << "Threads are joined" << std::endl;
     return result;
-    /*for (const std::pair<power, coeff> &term1 : this->terms)
-    {
-        for (const std::pair<power, coeff> &term2 : other.terms)
-        {
-            // Multiply the coefficients and add the powers
-            result.terms.push_back({term1.first + term2.first, term1.second * term2.second});
-        }
-    }
-
-    result.canonical_form();
-    return result;*/
+  
 }
 polynomial polynomial::operator*(int constant) const
 {
@@ -696,106 +710,6 @@ polynomial operator-(int constant, const polynomial &poly)
     return result;
 }
 
-// / operator overload
-polynomial polynomial::operator/(const polynomial &other) const
-{
-    polynomial quotient;
-    polynomial dividend(*this);
-    polynomial divisor(other);
-
-
-    // Check if the divisor is zero
-    if (divisor.terms.size() == 1 && divisor.terms.begin()->second == 0)
-    {
-        return quotient;
-    }
-
-    // Counter for consecutive same degrees, this is use for avoiding infinite while loop
-    size_t consecutive_same_degree_count = 0;
-    const size_t max_consecutive_same_degree = 3;
-
-    // Perform polynomial long division
-    while (dividend.find_degree_of() >= divisor.find_degree_of())
-    {
-        // Get the leading terms of the dividend and divisor
-        auto leading_term_dividend = *(dividend.terms.begin());
-        auto leading_term_divisor = *(divisor.terms.begin());
-
-        // get the quotient term
-        power quotient_power = leading_term_dividend.first - leading_term_divisor.first;
-        coeff quotient_coeff = leading_term_dividend.second / leading_term_divisor.second;
-
-        // Add the quotient term to the result
-        std::vector<std::pair<power, coeff>> quotient_vector = {{quotient_power, quotient_coeff}};
-        quotient = quotient + polynomial(quotient_vector.begin(), quotient_vector.end());
-
-        // dividend - (divisor * quotient term)
-        std::vector<std::pair<power, coeff>> term_to_subtract_vector = {{quotient_power, quotient_coeff}};
-        polynomial term_to_subtract = divisor * polynomial(term_to_subtract_vector.begin(), term_to_subtract_vector.end());
-
-        dividend = dividend - term_to_subtract;
-
-        // Check if the degree of remaining terms in the dividend is not decreasing
-        if (dividend.find_degree_of() >= leading_term_dividend.first)
-        {
-            consecutive_same_degree_count++;
-        }
-        else
-        {
-            consecutive_same_degree_count = 0;
-        }
-        // Check if the consecutive same degree count exceeds the threshold , avoid infinite loop
-        if (consecutive_same_degree_count >= max_consecutive_same_degree)
-        {
-            break;
-        }
-    }
-
-    //quotient.canonical_form();
-    return quotient;
-}
-
-polynomial polynomial::operator/(int constant) const
-{
-    // Check if the constant is zero
-    if (constant == 0)
-    {
-        return polynomial();
-    }
-
-    // Copy the caller
-    polynomial result(*this);
-
-    // Divide each term's coefficient by the constant
-    for (auto &term : result.terms)
-    {
-        term.second /= constant;
-    }
-    return result;
-}
-
-// Friend function for int / polynomial
-polynomial operator/(int constant, const polynomial &poly)
-{
-    // Check if the polynomial is zero
-    if (poly.terms.size() == 1 && poly.terms.begin()->second == 0)
-    {
-        return polynomial();
-    }
-
-    polynomial result;
-
-    if (poly.terms.size() == 1 && poly.terms.begin()->first == 0)
-    {
-        result.terms.insert({0, constant / poly.terms.begin()->second});
-    }
-    else
-    {
-        result.terms.insert({0, 0});
-    }
-
-    return result;
-}
 
 void polynomial::addTerm(power expo, coeff num){
     //std::cout << expo << " " << num << std::endl;

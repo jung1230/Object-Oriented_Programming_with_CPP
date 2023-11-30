@@ -123,6 +123,29 @@ void test_mod()
               << std::endl;
 }
 
+void long_express(){
+    std::vector<std::pair<power, coeff>> terms7 = {{10, 5}, {5, -3}, {2, 2}, {1, 1}};
+    polynomial p7(terms7.begin(), terms7.end());
+    std::vector<std::pair<power, coeff>> terms8 = {{8, 4}, {4, 2}, {2, -1}};
+    polynomial p8(terms8.begin(), terms8.end());
+    p7.print();
+    p8.print();
+    std::vector<std::pair<power, coeff>> terms9 = {{6, 5}, {5, -3}, {0, -2}, {17, 1}};
+    polynomial p9(terms9.begin(), terms9.end());
+    std::vector<std::pair<power, coeff>> terms10 = {{7, 4}, {4, 5}, {10, -1}};
+    polynomial p10(terms10.begin(), terms10.end());
+    polynomial result2 = p7 % p8;
+    result2.print();
+    result2 = 3 * (p7 % p8) + 5;
+    result2.print();
+    result2 = (3 * (p7 % p8) + 5)*10;
+    result2.print();
+    result2 = 7 + (3 * (p7 % p8) + 5)*10;
+    result2.print();
+    std::cout << "Degree of result2: " << result2.find_degree_of() << std::endl;
+    std::cout << "\n";
+}
+
 void test_multi()
 {
 
@@ -211,6 +234,20 @@ void test_Long_expression_with_degree()
 
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
     std::cout << "Time taken for expression 2: " << duration.count() << " microseconds" << std::endl;
+
+    // Test Case 3
+    start_time = std::chrono::high_resolution_clock::now();
+    std::vector<std::pair<power, coeff>> term69 = {{0,0}};
+    polynomial p69(term69.begin(), term69.end());
+    polynomial result3 = (3 * (p3 * p4 - 2 * p4 + p3 % p4 + p3 + p4 + 87 + p4*5) + 5);
+    std::cout << "Degree of result3: " << result3.find_degree_of() << std::endl;
+
+    end_time = std::chrono::high_resolution_clock::now();
+
+    result3.print();
+
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "Time taken for expression 3: " << duration.count() << " microseconds" << std::endl;
 }
 
 void additional_test_cases()
@@ -352,12 +389,30 @@ void test_sparse(){
     polynomial p5(terms5.begin(), terms5.end());
     p5.print();
 
-    std::vector<std::pair<power, coeff>> terms6 = {{0, 0}};
+    std::vector<std::pair<power, coeff>> terms6 = {{0, 7}};
     polynomial p6(terms6.begin(), terms6.end());
     p6.print();
 
     polynomial result3 = p5 * p6;
     std::cout << "Result of p5 * p6: ";
+    result3.print();
+    std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
+    std::cout << std::endl;
+
+    result3 = 10* p5;
+    std::cout << "Result of p5 * p6: ";
+    result3.print();
+    std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
+    std::cout << std::endl;
+
+    result3 = p6 + p5;
+    std::cout << "Result of p5 + p6: ";
+    result3.print();
+    std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
+    std::cout << std::endl;
+
+    result3 = p5%p6%p5;
+    std::cout << "Result of p5%p6%p5: ";
     result3.print();
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
     std::cout << std::endl;
@@ -415,10 +470,14 @@ void test_simple(){
     // }
     std::vector<std::pair<power, coeff>> terms1 = {{0,1}};
     polynomial test_poly(terms1.begin(), terms1.end());
+    auto start_time = std::chrono::high_resolution_clock::now();
     for(auto & poly: test){
         test_poly = test_poly * poly;
     }
-    std::cout << "Mul is done" << std::endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "Time taken for expression 1: " << duration.count() << " microseconds" << std::endl;
+    //std::cout << "Mul is done" << std::endl;
     // test_poly.print();
     writePolynomialsToFile("output.txt", test_poly);
 }
@@ -429,8 +488,8 @@ int main()
     //test_mod();
     //additional_test_cases();
     //  test_div();
-
-    //test_Long_expression_with_degree();
+    // long_express();
+    // test_Long_expression_with_degree();
     // test_sparse();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
     test_simple();

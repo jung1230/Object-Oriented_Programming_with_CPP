@@ -10,7 +10,7 @@
 #include<fstream>
 #include<sstream>
 
-const size_t num_of_threads = 4; // Number of threads
+const size_t num_of_threads = 8; // Number of threads
 /**
  * @brief Construct a new polynomial object that is the number 0 (ie. 0x^0)
  *
@@ -52,7 +52,13 @@ polynomial::polynomial(const polynomial &other)
     // go through each terms and copy it. If i do not add const at the begining, error will occur
     for (const std::pair<power, coeff> term : other.terms)
     {
-        this->terms.insert(term);
+        auto result_iter = this->terms.emplace(term);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = term.second;
+        }
+        // this->terms.insert(term);
     }
 }
 
@@ -107,7 +113,13 @@ polynomial &polynomial::operator=(const polynomial &other)
     // go through each term and copy it
     for (const std::pair<power, coeff> term : other.terms)
     {
-        this->terms.insert(term);
+        auto result_iter = this->terms.emplace(term);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = term.second;
+        }
+        // this->terms.insert(term);
     }
 
     return *this;
@@ -121,8 +133,7 @@ polynomial &polynomial::operator=(const polynomial &other)
  */
 size_t polynomial::find_degree_of() const
 {
-
-    return terms.begin()->first;
+    return canonical_form().at(0).first;
 }
 
 /**
@@ -193,10 +204,16 @@ polynomial polynomial::operator+(const polynomial &other) const
         if (iter1->first == iter2->first)
         {
             if(iter1->second + iter2->second != 0){
-                if(iter2->first == 0){ // Map cannot insert the key value pair if there is already the key in the map
-                    result.terms.erase(0);
+                auto result_iter = result.terms.emplace(iter1->first, iter1->second + iter2->second);
+                // If the term already exists, update its coefficient
+                if (!result_iter.second)
+                {
+                    result_iter.first->second = iter1->second + iter2->second;
                 }
-                result.terms.insert({iter1->first, iter1->second + iter2->second});
+                // if(iter2->first == 0){ // Map cannot insert the key value pair if there is already the key in the map
+                //     result.terms.erase(0);
+                // }
+                // result.terms.insert({iter1->first, iter1->second + iter2->second});
             }
             iter1++;
             iter2++;
@@ -217,23 +234,35 @@ polynomial polynomial::operator+(const polynomial &other) const
     // Copy remaining terms for terms1
     while (iter1 != terms.end())
     {
-        if(iter1->first == 0){
-            result.terms.erase(0);
-            result.terms.insert(*iter1);
+        auto result_iter = result.terms.emplace(*iter1);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = iter1->second;
         }
-        else
-            result.terms.insert(*iter1);
+        // if(iter1->first == 0){
+        //     result.terms.erase(0);
+        //     result.terms.insert(*iter1);
+        // }
+        // else
+        //     result.terms.insert(*iter1);
         iter1++;
     }
     // Copy remaining terms for terms2
     while (iter2 != other.terms.end())
     {
-        if(iter2->first == 0){
-            result.terms.erase(0);
-            result.terms.insert(*iter2);
+        auto result_iter = result.terms.emplace(*iter2);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = iter2->second;
         }
-        else
-            result.terms.insert(*iter2);
+        // if(iter2->first == 0){
+        //     result.terms.erase(0);
+        //     result.terms.insert(*iter2);
+        // }
+        // else
+        //     result.terms.insert(*iter2);
         iter2++;
     }
     if(result.terms.empty())
@@ -335,7 +364,7 @@ polynomial polynomial::operator*(const polynomial &other) const
         multipliers.push_back(other);
         //counts.push_back(0);
     }
-    std::cout << "Here I am" << std::endl;
+    // std::cout << "Here I am" << std::endl;
     // Launch the threads
     for (size_t i = 0; i < num_of_threads; i++)
     {
@@ -347,7 +376,7 @@ polynomial polynomial::operator*(const polynomial &other) const
     {
         threads[i].join();
     }
-    std::cout << "MUL done" << std::endl;
+    // std::cout << "MUL done" << std::endl;
     for (auto &mul_term : results)
     {
         //mul_term.print();
@@ -555,9 +584,15 @@ polynomial polynomial::operator-(const polynomial &other) const
         if (iter1->first == iter2->first)
         {
             if(iter1->second - iter2->second != 0){
-                if(iter2->first == 0)
-                    result.terms.erase(0);
-                result.terms.insert({iter1->first, iter1->second - iter2->second});
+                auto result_iter = result.terms.emplace(iter1->first, iter1->second - iter2->second);
+                // If the term already exists, update its coefficient
+                if (!result_iter.second)
+                {
+                    result_iter.first->second = iter1->second - iter2->second;
+                }
+                // if(iter2->first == 0)
+                //     result.terms.erase(0);
+                // result.terms.insert({iter1->first, iter1->second - iter2->second});
             }
             iter1++;
             iter2++;
@@ -579,17 +614,29 @@ polynomial polynomial::operator-(const polynomial &other) const
     // Copy remaining terms from the first polynomial
     while (iter1 != this->terms.end())
     {
-        if(iter1->first == 0)
-            result.terms.erase(0);
-        result.terms.insert(*iter1);
+        auto result_iter = result.terms.emplace(*iter1);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = iter1->second;
+        }
+        // if(iter1->first == 0)
+        //     result.terms.erase(0);
+        // result.terms.insert(*iter1);
         iter1++;
     }
     // Copy remaining terms from the second polynomial with negation
     while (iter2 != other.terms.end())
     {
-        if(iter2->first == 0)
-            result.terms.erase(0);
-        result.terms.insert(*iter2);
+        auto result_iter = result.terms.emplace(*iter2);
+        // If the term already exists, update its coefficient
+        if (!result_iter.second)
+        {
+            result_iter.first->second = iter2->second;
+        }
+        // if(iter2->first == 0)
+        //     result.terms.erase(0);
+        // result.terms.insert(*iter2);
         iter2++;
     }
     if(result.terms.empty())

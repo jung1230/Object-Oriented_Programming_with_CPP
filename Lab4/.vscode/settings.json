@@ -64,6 +64,8 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "variant": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "condition_variable": "cpp",
+        "future": "cpp"
     }
 }

@@ -159,31 +159,43 @@ size_t polynomial::find_degree_of() const
  */
 std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
 {
-    polynomial temp(*this);
-    std::vector<size_t> delete_key;
-    auto it = temp.terms.begin();
-    // Iterate the map to find whose coefficient is zero
-    while (1)
-    {
-        if (it->second == 0)
-            delete_key.push_back(it->first);
-        if (it == temp.terms.end())
-            break;
-        it++;
-    }
-    // Delete the key whose coefficient is zero
-    for (auto keyy : delete_key)
-    {
-        temp.terms.erase(keyy);
-    }
-    if (temp.terms.empty())
-        temp.terms.insert({0, 0});
-    // copy all the terms
     std::vector<std::pair<power, coeff>> sorted_terms;
-    for (const auto &pairr : temp.terms)
+    for (const auto &pairr : this->terms)
     {
-        sorted_terms.push_back(pairr);
+        if (pairr.second != 0)
+            sorted_terms.push_back(pairr);
+        else
+            continue;
     }
+    if (sorted_terms.size() == 0)
+    {
+        sorted_terms.push_back({0, 0});
+    }
+    // polynomial temp(*this);
+    // std::vector<size_t> delete_key;
+    // auto it = temp.terms.begin();
+    // // Iterate the map to find whose coefficient is zero
+    // while (1)
+    // {
+    //     if (it->second == 0)
+    //         delete_key.push_back(it->first);
+    //     if (it == temp.terms.end())
+    //         break;
+    //     it++;
+    // }
+    // // Delete the key whose coefficient is zero
+    // for (auto keyy : delete_key)
+    // {
+    //     temp.terms.erase(keyy);
+    // }
+    // if (temp.terms.empty())
+    //     temp.terms.insert({0, 0});
+    // // copy all the terms
+
+    // for (const auto &pairr : temp.terms)
+    // {
+    //     sorted_terms.push_back(pairr);
+    // }
 
     return sorted_terms;
 }
@@ -827,7 +839,7 @@ polynomial polynomial::operator-(const polynomial &other) const
         // If the term already exists, update its coefficient
         if (!result_iter.second)
         {
-            result_iter.first->second = iter2->second;
+            result_iter.first->second = -iter2->second;
         }
         // if(iter2->first == 0)
         //     result.terms.erase(0);
@@ -868,9 +880,13 @@ polynomial operator-(int constant, const polynomial &poly)
 {
     // copy poly
     polynomial result(poly);
-
+    auto it = result.terms.begin();
+    for (auto &term : result.terms)
+    {
+        term.second = -term.second;
+    }
     // Check if there's already a term with power 0
-    auto it = result.terms.end();
+    it = result.terms.end();
     it--;
     // If a term with power 0 exists, subtract the constant from its coefficient
     if (it->first == 0)

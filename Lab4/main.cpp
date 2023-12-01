@@ -3,9 +3,9 @@
 #include <optional>
 #include <vector>
 #include <chrono>
-#include<fstream>
-#include<sstream>
-#include <cassert> 
+#include <fstream>
+#include <sstream>
+#include <cassert>
 #include "poly.h"
 
 std::optional<double> poly_test(polynomial &p1,
@@ -50,10 +50,10 @@ void bulky_Alan()
 void test_mod()
 {
     // Example 1
-    std::vector<std::pair<power, coeff>> terms1 = {{0, -3},{4, 1},{2, 2}};
+    std::vector<std::pair<power, coeff>> terms1 = {{0, -3}, {4, 1}, {2, 2}};
     polynomial p1(terms1.begin(), terms1.end());
     p1.print();
-    std::vector<std::pair<power, coeff>> terms2 = {{0, 1},{2, 1}};
+    std::vector<std::pair<power, coeff>> terms2 = {{0, 1}, {2, 1}};
     polynomial p2(terms2.begin(), terms2.end());
     p2.print();
 
@@ -90,7 +90,7 @@ void test_mod()
 
     p6.print();
     p5.print();
-    polynomial remainder4 = p6 % p5;
+    polynomial remainder4 = p6 % p5  ;
     std::cout << "Remainder after division (Example 4): ";
     remainder4.print();
     std::cout << "\n";
@@ -123,7 +123,8 @@ void test_mod()
               << std::endl;
 }
 
-void long_express(){
+void long_express()
+{
     std::vector<std::pair<power, coeff>> terms7 = {{10, 5}, {5, -3}, {2, 2}, {1, 1}};
     polynomial p7(terms7.begin(), terms7.end());
     std::vector<std::pair<power, coeff>> terms8 = {{8, 4}, {4, 2}, {2, -1}};
@@ -138,9 +139,9 @@ void long_express(){
     result2.print();
     result2 = 3 * (p7 % p8) + 5;
     result2.print();
-    result2 = (3 * (p7 % p8) + 5)*10;
+    result2 = (3 * (p7 % p8) + 5) * 10;
     result2.print();
-    result2 = 7 + (3 * (p7 % p8) + 5)*10;
+    result2 = 7 + (3 * (p7 % p8) + 5) * 10;
     result2.print();
     std::cout << "Degree of result2: " << result2.find_degree_of() << std::endl;
     std::cout << "\n";
@@ -180,14 +181,14 @@ void test_multi()
     std::cout << std::endl;
 
     // Example 3
-    std::vector<std::pair<power, coeff>> terms5 = {{3, 2}, {2, 3}, {1, -4}, {0, 1}};
+    std::vector<std::pair<power, coeff>> terms5 = {{13, 2}, {12, 3}, {9, -4}, {8, 1},{7, 2}, {6, 3}, {5, -4}, {4, 1},{3, 2}, {2, 3}, {1, -4}, {0, 1}};
     polynomial p5(terms5.begin(), terms5.end());
     p5.print();
-
-    int constant = 0;
+    p5.print();
+    int constant = 4;
     std::cout << "Constant: " << constant << std::endl;
 
-    polynomial result3 = p5 * constant;
+    polynomial result3 = constant*p5  ;
     std::cout << "Result of p5 * constant: ";
     result3.print();
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
@@ -237,9 +238,9 @@ void test_Long_expression_with_degree()
 
     // Test Case 3
     start_time = std::chrono::high_resolution_clock::now();
-    std::vector<std::pair<power, coeff>> term69 = {{0,0}};
+    std::vector<std::pair<power, coeff>> term69 = {{0, 0}};
     polynomial p69(term69.begin(), term69.end());
-    polynomial result3 = (3 * (p3 * p4 - 2 * p4 + p3 % p4 + p3 + p4 + 87 + p4*5) + 5);
+    polynomial result3 = (3 * (p3 * p4 - 2 * p4 + p3 % p4 + p3 + p4 + 87 + p4 * 5) + 5);
     std::cout << "Degree of result3: " << result3.find_degree_of() << std::endl;
 
     end_time = std::chrono::high_resolution_clock::now();
@@ -271,7 +272,7 @@ void additional_test_cases()
     polynomial zeroRemainder(zeroRemainderTerms.begin(), zeroRemainderTerms.end());
     zeroRemainder.print();
     zeroRemainder.print();
-    std::cout <<"zeroRemainder.find_degree_of();"<<zeroRemainder.find_degree_of();
+    std::cout << "zeroRemainder.find_degree_of();" << zeroRemainder.find_degree_of();
     polynomial result2 = zeroRemainder % zeroRemainder;
     std::cout << "Remainder after division (Zero remainder): ";
     result2.print();
@@ -306,9 +307,8 @@ void additional_test_cases()
     std::cout << "\n";
 }
 
-
-
-void test_sparse(){
+void test_sparse()
+{
     // Test 1
     std::vector<std::pair<power, coeff>> terms1 = {{10001, 3}, {1, -1}, {3, 2}};
     polynomial p1(terms1.begin(), terms1.end());
@@ -323,7 +323,7 @@ void test_sparse(){
     result1.print();
     std::cout << "Degree of Result: " << result1.find_degree_of() << std::endl;
     std::cout << std::endl;
-    //Test 2
+    // Test 2
     std::vector<std::pair<power, coeff>> terms3 = {{10001, 3}, {1, -1}, {3, 2}, {6969, 5}, {3737, 2}, {0, 87}};
     polynomial p3(terms3.begin(), terms3.end());
     p3.print();
@@ -337,7 +337,7 @@ void test_sparse(){
     result2.print();
     std::cout << "Degree of Result: " << result2.find_degree_of() << std::endl;
     std::cout << std::endl;
-    //Test 3
+    // Test 3
     std::vector<std::pair<power, coeff>> terms5 = {{10001, 3}, {1, -1}, {3, 2}, {6969, 5}, {3737, 2}, {0, 87}};
     polynomial p5(terms5.begin(), terms5.end());
     p5.print();
@@ -352,7 +352,7 @@ void test_sparse(){
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
     std::cout << std::endl;
 
-    result3 = 10* p5;
+    result3 = 10 * p5;
     std::cout << "Result of p5 * p6: ";
     result3.print();
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
@@ -364,17 +364,18 @@ void test_sparse(){
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
     std::cout << std::endl;
 
-    result3 = p5%p6%p5;
+    result3 = p5 % p6 % p5;
     std::cout << "Result of p5%p6%p5: ";
     result3.print();
     std::cout << "Degree of Result: " << result3.find_degree_of() << std::endl;
     std::cout << std::endl;
-
 }
 
-void parsefile(const std::string& filename, std::vector<polynomial> & test){
+void parsefile(const std::string &filename, std::vector<polynomial> &test)
+{
     std::ifstream file(filename);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
@@ -382,19 +383,22 @@ void parsefile(const std::string& filename, std::vector<polynomial> & test){
     std::string line;
     polynomial currentPolynomial = polynomial();
 
-    while (std::getline(file, line)) {
-        if (line == ";") {
+    while (std::getline(file, line))
+    {
+        if (line == ";")
+        {
             // End of polynomial, add it to the vector and reset
-            //currentPolynomial.print();
+            // currentPolynomial.print();
             test.push_back(currentPolynomial);
             currentPolynomial = polynomial();
-        } 
-        else {
+        }
+        else
+        {
             // Parse coefficient and power from the line
             std::istringstream iss(line);
             coeff coefficient;
             power exponent;
-            char x;  // To consume 'x'
+            char x; // To consume 'x'
             iss >> coefficient >> x >> x >> exponent;
             currentPolynomial.addTerm(exponent, coefficient);
         }
@@ -403,9 +407,11 @@ void parsefile(const std::string& filename, std::vector<polynomial> & test){
     file.close();
 }
 
-void writePolynomialsToFile(const std::string& filename, const polynomial& answer) {
+void writePolynomialsToFile(const std::string &filename, const polynomial &answer)
+{
     std::ofstream outfile(filename);
-    if (!outfile.is_open()) {
+    if (!outfile.is_open())
+    {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
@@ -415,28 +421,30 @@ void writePolynomialsToFile(const std::string& filename, const polynomial& answe
     outfile.close();
 }
 
-void test_simple(){
+void test_simple()
+{
     std::vector<polynomial> test;
     parsefile("simple_poly.txt", test);
     // for(auto & poly: test){
     //     poly.print();
     // }
-    std::vector<std::pair<power, coeff>> terms1 = {{0,1}};
+    std::vector<std::pair<power, coeff>> terms1 = {{0, 1}};
     polynomial test_poly(terms1.begin(), terms1.end());
     auto start_time = std::chrono::high_resolution_clock::now();
-    for(auto & poly: test){
+    for (auto &poly : test)
+    {
         test_poly = test_poly * poly;
     }
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
     std::cout << "Time taken for expression 1: " << duration.count() << " microseconds" << std::endl;
-    //std::cout << "Mul is done" << std::endl;
-    // test_poly.print();
+    // std::cout << "Mul is done" << std::endl;
+    //  test_poly.print();
     writePolynomialsToFile("output.txt", test_poly);
 }
 
-void test_find_degree_of() {
-
+void test_find_degree_of()
+{
 
     // Test case 1: Polynomial with a single term
     std::vector<std::pair<power, coeff>> terms1 = {{3, 2}};
@@ -444,7 +452,7 @@ void test_find_degree_of() {
     assert(p1.find_degree_of() == 3);
 
     // Test case 2: Polynomial with multiple terms
-    std::vector<std::pair<power, coeff>> terms2 ={{2, 5}, {4, 2}, {1, 7}};
+    std::vector<std::pair<power, coeff>> terms2 = {{2, 5}, {4, 2}, {1, 7}};
     polynomial p2(terms2.begin(), terms2.end());
     assert(p2.find_degree_of() == 4);
 
@@ -453,21 +461,21 @@ void test_find_degree_of() {
     assert(poly3.find_degree_of() == 0);
 
     // Test case 4: Constant polynomial
-    std::vector<std::pair<power, coeff>> terms3 ={{0, 8}};
+    std::vector<std::pair<power, coeff>> terms3 = {{0, 8}};
     polynomial poly4(terms3.begin(), terms3.end());
     assert(poly4.find_degree_of() == 0);
 
     // Test case 5: Polynomial with zero coefficients
-    std::vector<std::pair<power, coeff>> terms4 ={{3, 0}, {1, 0}, {0, 0}};
+    std::vector<std::pair<power, coeff>> terms4 = {{3, 0}, {1, 0}, {0, 0}};
     polynomial poly5(terms4.begin(), terms4.end());
     poly5.print();
     assert(poly5.find_degree_of() == 0);
 
-    std::vector<std::pair<power, coeff>> terms5 ={{3, 4}, {2, 7}, {3, 1}};
+    std::vector<std::pair<power, coeff>> terms5 = {{3, 4}, {2, 7}, {3, 1}};
     polynomial poly6(terms5.begin(), terms5.end());
     poly6.print();
     poly6.print();
-    
+
     assert(poly6.find_degree_of() == 3);
     polynomial result = poly6 + poly6;
     result.print();
@@ -479,19 +487,83 @@ void test_find_degree_of() {
     std::cout << "All test cases passed!" << std::endl;
 }
 
+void test_minus(){
+    std::vector<std::pair<power, coeff>> terms1 = {{3, 2},{0,10}};
+    polynomial p1(terms1.begin(), terms1.end());
+    std::vector<std::pair<power, coeff>> terms2 = {{2, 5}, {4, 2}, {1, 7}};
+    polynomial p2(terms2.begin(), terms2.end());
+    p1.print();
+    p2.print();
+    std::cout<< "\np1 - p2" <<std::endl;
+    polynomial result1 = p1 - p2;
+    result1.print();
+    std::cout<< "\np2 - p1" <<std::endl;
+    polynomial result2 = p2 - p1;
+    result2.print();
+    std::cout<< "\np1 - 10" <<std::endl;
+    result1 = p1 - 10;
+    result1.print();
+    std::cout<< "\np2 - 10" <<std::endl;
+    result1 = p2 - 10;
+    result1.print();
+    std::cout<< "\n10 -p1" <<std::endl;
+    result1 = 10 -p1;
+    result1.print();
+    std::cout<< "\n10 - p2" <<std::endl;
+    result1 = 10 - p2;
+    result1.print();
+    std::cout<< "\np2 - p2" <<std::endl;
+    result1 = p2 - p2 -p2;
+    result1.print();
+
+}
+
+
+void test_add(){
+    std::vector<std::pair<power, coeff>> terms1 = {{2, 5},{0, -10}};
+    polynomial p1(terms1.begin(), terms1.end());
+    std::vector<std::pair<power, coeff>> terms2 = {{2, -5}, {4, 2}, {1, 7}};
+    polynomial p2(terms2.begin(), terms2.end());
+    p1.print();
+    p2.print();
+    std::cout<< "\np1 + p2" <<std::endl;
+    polynomial result1 = p1 + p2;
+    result1.print();
+    std::cout<< "\np2 - p1" <<std::endl;
+    polynomial result2 = p2 + p1;
+    result2.print();
+    std::cout<< "\np1 - 10" <<std::endl;
+    result1 = p1 + 10;
+    result1.print();
+    std::cout<< "\np2 - 10" <<std::endl;
+    result1 = p2 + 10;
+    result1.print();
+    std::cout<< "\n10 -p1" <<std::endl;
+    result1 = 10 +p1;
+    result1.print();
+    std::cout<< "\n10 - p2" <<std::endl;
+    result1 = 10 + p2;
+    result1.print();
+    std::cout<< "\np2 - p2" <<std::endl;
+    result1 = p2 + p2 +p2;
+    result1.print();
+
+}
+
 int main()
 {
+    //test_add();
     // bulky_Alan();
-    // test_multi();
-    //test_mod();
+    //test_multi();
+    // test_mod();
+    test_minus();
     // additional_test_cases();
-    //  long_express();
+    //long_express();
     //  test_Long_expression_with_degree();
     // test_sparse();
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
-    // test_simple();
-    test_find_degree_of();
-    
+    //test_simple();
+    // test_find_degree_of();
 
     std::vector<std::pair<power, coeff>> solution = {{2, 1}, {1, 2}, {0, 1}};
 

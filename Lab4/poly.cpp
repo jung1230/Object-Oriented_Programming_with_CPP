@@ -158,27 +158,17 @@ size_t polynomial::find_degree_of() const
  */
 std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
 {
-    polynomial temp(*this);
-    std::vector<size_t> delete_key;
-    auto it = temp.terms.begin();
-    // Iterate the map to find whose coefficient is zero
-    while(1){
-        if(it->second == 0)
-            delete_key.push_back(it->first);
-        if(it == temp.terms.end())
-            break;
-        it++;
-    }
-    // Delete the key whose coefficient is zero
-    for(auto keyy: delete_key){
-        temp.terms.erase(keyy);
-    }
-    if(temp.terms.empty())
-        temp.terms.insert({0,0});
-    // copy all the terms
     std::vector<std::pair<power, coeff>> sorted_terms;
-    for(const auto& pairr: temp.terms){
-        sorted_terms.push_back(pairr);
+    for (const auto &pairr : this->terms)
+    {
+        if (pairr.second != 0)
+            sorted_terms.push_back(pairr);
+        else
+            continue;
+    }
+    if (sorted_terms.size() == 0)
+    {
+        sorted_terms.push_back({0, 0});
     }
 
     return sorted_terms;
@@ -544,10 +534,6 @@ polynomial polynomial::operator%(const polynomial &other) const
         return remainder;
     }
 
-    // Counter for consecutive same degrees, used for avoiding infinite while loop
-    // size_t consecutive_same_degree_count = 0;
-    // const size_t max_consecutive_same_degree = 1;
-
     // Perform polynomial long division
     while (dividend.find_degree_of() >= divisor.find_degree_of())
     {
@@ -562,21 +548,14 @@ polynomial polynomial::operator%(const polynomial &other) const
         // Subtract from the dividend to get the remainder
         std::vector<std::pair<power, coeff>> term_to_subtract_vector = {{quotient_power, quotient_coeff}};
         polynomial term_to_subtract = divisor * polynomial(term_to_subtract_vector.begin(), term_to_subtract_vector.end());
-        dividend = dividend - term_to_subtract;
+        dividend = dividend - term_to_subtract; // this might be the issue
         //dividend.print();
         // Check if the degree of remaining terms in the dividend is not decreasing
         if (dividend.find_degree_of() >= leading_term_dividend.first)
         {
             break;
         }
-        // else {
-        //     consecutive_same_degree_count = 0;
-        // }
 
-        // // Check if the consecutive same degree count exceeds the threshold to avoid infinite loop
-        // if (consecutive_same_degree_count >= max_consecutive_same_degree) {
-        //     break;
-        // }
     }
 
     remainder = dividend;
@@ -646,7 +625,7 @@ polynomial polynomial::operator-(const polynomial &other) const
         // If the term already exists, update its coefficient
         if (!result_iter.second)
         {
-            result_iter.first->second = iter2->second;
+            result_iter.first->second = -iter2->second;
         }
         // if(iter2->first == 0)
         //     result.terms.erase(0);
@@ -657,6 +636,8 @@ polynomial polynomial::operator-(const polynomial &other) const
         result.terms.insert({0,0});
     return result;
 }
+
+
 polynomial polynomial::operator-(int constant) const
 {
     // Copy the caller
@@ -683,19 +664,26 @@ polynomial polynomial::operator-(int constant) const
         result.terms.insert({0,0});
     return result;
 }
+
+
 polynomial operator-(int constant, const polynomial &poly)
 {
     // copy poly
     polynomial result(poly);
 
+    // Negate all coefficients
+    for (auto &term : result.terms)
+    {
+        term.second = -term.second;
+    }
     // Check if there's already a term with power 0
     auto it = result.terms.end();
     it--;
     // If a term with power 0 exists, subtract the constant from its coefficient
     if (it->first == 0)
     {
-        if(constant - it->second != 0)
-            it->second = constant - it->second;
+        if(constant + it->second != 0)
+            it->second = constant + it->second;
         else
             result.terms.erase(it->first);
     }

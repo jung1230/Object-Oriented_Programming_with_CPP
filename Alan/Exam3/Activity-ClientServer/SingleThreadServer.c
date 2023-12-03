@@ -6,7 +6,6 @@
 #include <strings.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <pthread.h>
 
 #define LISTENQ 10
 #define MAXLINE 100
@@ -42,55 +41,40 @@ int open_listenfd(int port)
   return listenfd; 
 } 
 
-// Function to handle the communication with a client
-void *echo_thread(void *arg) {
-  int connfd = *((int *)arg);
-  size_t n;
-  char buf[MAXLINE];
+void echo(int connfd)  
+{ 
+  size_t n;  
+  char buf[MAXLINE];  
+    
+ 
+    
+  while((n = read(connfd, buf, MAXLINE)) != 0) { 
+    printf("server received %ld bytes\n", n); 
+    write(connfd, buf, n); 
+  } 
+} 
 
-  while ((n = read(connfd, buf, MAXLINE)) != 0) {
-    printf("server received %ld bytes\n", n);
-    write(connfd, buf, n);
-  }
-
-  close(connfd);
-  free(arg);
-  pthread_exit(NULL);
-}
 
 int main(int argc, char **argv) {
-  int listenfd, *connfd;
-  pthread_t tid;
+  int listenfd, connfd, port;
   socklen_t clientlen;
   struct sockaddr_in clientaddr;
+  //  struct hostent *hp;
+  //  char *haddrp;
 
-  int port = atoi(argv[1]);
-  listenfd = open_listenfd(port);
+  port = atoi(argv[1]); /* the server listens on a port passed 
+			   on the command line */
+  listenfd = open_listenfd(port); 
 
   while (1) {
-    clientlen = sizeof(clientaddr);
-    connfd = (int *)malloc(sizeof(int));
-    *connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
+    clientlen = sizeof(clientaddr); 
+    connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
 
-    if (pthread_create(&tid, NULL, echo_thread, (void *)connfd) != 0) {
-      perror("pthread_create");
-      close(listenfd);
-      exit(EXIT_FAILURE);
-    }
+    //    hp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
+    //		       sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+    // haddrp = inet_ntoa(clientaddr.sin_addr);
 
-    // Detach the thread to allow it to clean up resources on exit
-    if (pthread_detach(tid) != 0) {
-      perror("pthread_detach");
-      close(listenfd);
-      exit(EXIT_FAILURE);
-    }
+    echo(connfd);
+    close(connfd);
   }
-
-  // The program will never reach this point in this example
-  close(listenfd);
-  return 0;
 }
-
-
-// g++ -o server server.c
-//./client eceprog1 5000

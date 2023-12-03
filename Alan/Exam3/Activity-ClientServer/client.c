@@ -14,6 +14,7 @@ int open_clientfd(char *hostname, int port)
   struct hostent *hp; 
   struct sockaddr_in serveraddr; 
  
+/* Create a socket descriptor */ 
   if ((clientfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     return -1; /* check errno for cause of error */ 
  

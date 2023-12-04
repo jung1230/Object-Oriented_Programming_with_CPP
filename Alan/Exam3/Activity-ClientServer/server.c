@@ -11,7 +11,6 @@
 #define LISTENQ 10
 #define MAXLINE 100
 
-// this maintain the same
 int open_listenfd(int port)  
 { 
   int listenfd, optval=1; 
@@ -54,7 +53,6 @@ void *echo_thread(void *arg) {
     write(connfd, buf, n);
   }
 
-  printf("-------------- will it come here??? ------------------")
   close(connfd);
   free(arg);
   pthread_exit(NULL);
@@ -93,6 +91,6 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-// gcc server.c -o server -pthread
+
 // g++ -o server server.c
 //./client eceprog1 5000

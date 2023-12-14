@@ -11,6 +11,7 @@
 #define LISTENQ 10
 #define MAXLINE 100
 
+// ------------ same here ------------------- 
 int open_listenfd(int port)  
 { 
   int listenfd, optval=1; 
@@ -42,6 +43,8 @@ int open_listenfd(int port)
   return listenfd; 
 } 
 
+
+// ------------ change here ------------------- 
 // Function to handle the communication with a client
 void *echo_thread(void *arg) {
   int connfd = *((int *)arg);
@@ -69,9 +72,12 @@ int main(int argc, char **argv) {
 
   while (1) {
     clientlen = sizeof(clientaddr);
+    // ------------ change here ------------------- 
     connfd = (int *)malloc(sizeof(int));
     *connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
 
+
+  // tid = thread id
     if (pthread_create(&tid, NULL, echo_thread, (void *)connfd) != 0) {
       perror("pthread_create");
       close(listenfd);

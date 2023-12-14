@@ -34,6 +34,8 @@ void printActiveClients() {
         } else {
             std::cout << "No active clients." << std::endl;
         }
+        // lock will be realse here
+
     }
 }
 
@@ -42,12 +44,15 @@ void sender(uint8_t socketId, std::string clientAdd) {
     while (true) {
         ssize_t bytesRead;
         bzero(&data[0], RESPONSE_MAX_LENGTH);
+
+        // get message
         bytesRead = read(socketId, &data[0], RESPONSE_MAX_LENGTH);
 
         if (bytesRead == 0) {
             {
                 std::lock_guard<std::mutex> lock(clientsMutex);
                 activeClients.erase(std::remove(activeClients.begin(), activeClients.end(), clientAdd), activeClients.end());
+                // lock will be realse here
             }
 
             std::cout << "[" << __TIME__ << " "
@@ -64,6 +69,7 @@ void sender(uint8_t socketId, std::string clientAdd) {
                   << "Server_.cpp:" << __LINE__ << "] "
                   << "Echoing " << data << " --> " << clientAdd << "\n";
 
+        // return message
         send(socketId, &data[0], bytesRead, 0);
     }
 }
@@ -114,6 +120,7 @@ void listenToSocket(uint8_t listenfd, uint16_t port) {
         int addrlen = sizeof(address);
         uint8_t connfd;
 
+        // Accepts a connection using accept and obtains a new file descriptor (connfd) for the connection.
         if ((connfd = accept(listenfd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
             perror("accept");
             exit(EXIT_FAILURE);
@@ -127,15 +134,29 @@ void listenToSocket(uint8_t listenfd, uint16_t port) {
         {
             std::lock_guard<std::mutex> lock(clientsMutex);
             activeClients.push_back(clientAdd);
+            // lock will be realse here
+
         }
 
         std::cout << "[" << __TIME__ << " "
                   << "Server_.cpp:" << __LINE__ << "] "
                   << clientAdd
                   << " Connected!\n";
+        // Detached threads are suitable for simple applications 
+        // where you don't need to explicitly wait for the threads
+        // to finish, and the threads can safely terminate when
+        // the main thread exits.
 
+        // After the accept function successfully returns with a new file 
+        // descriptor connfd representing the accepted connection, 
+        // the server immediately spawns a new thread to handle 
+        // communication with that specific client. This newly created 
+        // thread takes ownership of the connfd, and the main thread
+        //  is free to go back to the accept function to wait for the
+        // next incoming connection.
         std::thread(sender, connfd, clientAdd).detach();
     }
+
 }
 
 int main(int argc, char** argv) {

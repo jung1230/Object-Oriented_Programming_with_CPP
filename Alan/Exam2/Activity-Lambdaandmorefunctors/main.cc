@@ -42,7 +42,12 @@ int main() {
         std::cout << num << " " << std::endl;;
     }
 
-    // Task 3
+
+
+    // [capture](parameters) -> return_type {
+    //     // function body
+    // }
+    // Task 3 implement lambda
     std::vector<int> vec2 = {1, 2, 3, 4, 5};
     std::cout << "Before" << std::endl;
     for (const auto& num : vec2) {

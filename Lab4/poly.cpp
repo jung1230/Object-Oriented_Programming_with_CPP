@@ -52,8 +52,10 @@ polynomial::polynomial(const polynomial &other)
     // go through each terms and copy it. If i do not add const at the begining, error will occur
     for (const std::pair<power, coeff> term : other.terms)
     {
+        // result iter is a pair that contain iter and a bool (succeed or failed = 1 or 0)
         auto result_iter = this->terms.emplace(term);
-        // If the term already exists, update its coefficient
+
+        // This part checks if the insertion was successful. If the term already exists in the terms container, it updates the coefficient of the existing term to match the coefficient of the term being copied.
         if (!result_iter.second)
         {
             result_iter.first->second = term.second;
@@ -337,6 +339,8 @@ polynomial polynomial::operator*(const polynomial &other) const
         auto thread_multiply = [this, &results, &other, &multipliers](size_t thread_ID, size_t total_thread_num)
         {
             auto it = this->terms.begin();
+
+            // advances an iterator by a specified number of steps
             std::advance(it, thread_ID);
             for (size_t i = thread_ID; i < terms.size(); i = i + total_thread_num)// Divide the workload
             { 
@@ -345,9 +349,6 @@ polynomial polynomial::operator*(const polynomial &other) const
                     std::advance(it, total_thread_num);
                 for (const auto &term2 : multipliers[thread_ID].terms)
                 {
-                    // if(it->first == 0) // If key already exists in the map, insert the same key will fail. So we need to erase first
-                    //     results[thread_ID].terms.erase(it->first);
-                    // results[thread_ID].terms.insert({it->first + term2.first, it->second * term2.second});
                     auto result_iter = results[thread_ID].terms.emplace(it->first + term2.first, it->second * term2.second);
 
                     // If the term already exists, update its coefficient
